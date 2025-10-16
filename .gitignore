@@ -1,9 +1,25 @@
+<<<<<<< HEAD
 /.idea
 .gradle
 /local.properties
+=======
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+>>>>>>> 4744f3e (Inicio de Proyecto)
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
+<<<<<<< HEAD
 *.iml
+=======
+local.properties
+>>>>>>> 4744f3e (Inicio de Proyecto)
