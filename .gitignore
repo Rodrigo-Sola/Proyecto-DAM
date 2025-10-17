@@ -13,6 +13,7 @@ captures/
 *.ap_
 *.aab
 *.aar
+.gradle/
 
 # =========================
 # IntelliJ / Android Studio
