@@ -1,3 +1,39 @@
 <resources>
     <string name="app_name">Proyecto-DAM</string>
+    <string name="Onboarding1_title">Comparte lo que sabes</string>
+    <string name="Onboarding_title2">Encuentra tu match perfecto</string>
+    <string name="Onboarding_title3">únete a la comunidad</string>
+    <string name="Onboarding1_descripion1">Enseña tus habilidades y aprende de otros en una comunidad colaborativa.</string>
+    <string name="Onboarding1_description2">Intercambia conocimientos de forma fácil y divetida</string>
+    <string name="Onboarding2_description">Nuestro sistema inteligente te conceta con personas qeu tiene las habilidades que buscas y quieren aprender lo que tu sabes.</string>
+    <string name="Onboarding3_description">Forma parte de una red de aprendizaje donde cada intercambio te acerca más a tus objetivos personales y profecionales.</string>
+    <string name="Onboarding_count1">1/3</string>
+    <string name="Onboarding_count2">2/3</string>
+    <string name="Onboarding_count3">3/3</string>
+    <string name="Onboarding_exit">Saltar</string>
+    <string name="onboarding_image_description">Onboarding Image</string>
+    <string name="Onboarding_btn1">Saltar</string>
+    <string name="Onboarding_btn3">Anterior</string>
+    <string name="Onboarding_btn2">Siguiente</string>
+    <string name="Onboarding_btn4">Comenzar</string>
+    <!-- New strings for activity_main -->
+    <string name="app_logo">Logo de la aplicación</string>
+    <string name="skillswap">SkillSwap</string>
+    <string name="subtitle">Intercambia conocimientos, crece juntos</string>
+    <string name="welcome_back">¡Bienvenido de vuelta!</string>
+    <string name="welcome_desc">Inicia sesión para continuar\nintercambiando conocimientos</string>
+    <string name="hint_email">Correo electrónico</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="btn_login">Iniciar Sesión</string>
+    <string name="divider_text">O continúa con</string>
+    <string name="google_login_desc">Google login</string>
+    <string name="google_text">Google</string>
+    <string name="github_login_desc">GitHub login</string>
+    <string name="github_text">GitHub</string>
+    <string name="facebook_login_desc">Facebook login</string>
+    <string name="facebook_text">Facebook</string>
+    <string name="new_user_text">¿Nuevo usuario?</string>
+    <string name="register_text">Regístrate</string>
+
 </resources>
