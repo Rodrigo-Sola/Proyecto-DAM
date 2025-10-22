@@ -19,13 +19,8 @@ captures/
 # IntelliJ / Android Studio
 # =========================
 .idea/
+.idea
 *.iml
-.idea/caches
-.idea/libraries
-.idea/modules.xml
-.idea/workspace.xml
-.idea/navEditor.xml
-.idea/assetWizardSettings.xml
 
 # =========================
 # Configuración del sistema
@@ -44,15 +39,40 @@ Thumbs.db
 !gradle/wrapper/gradle-wrapper.properties
 
 # =========================
-# Archivos de entorno y claves
+# Firebase y claves API
 # =========================
+# Archivos de configuración de Firebase
 /app/google-services.json
 /app/src/**/google-services.json
 /app/src/**/debug/google-services.json
 /app/src/**/release/google-services.json
+google-services.json
+**/google-services.json
+
+# Crashlytics y Firebase
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+com_crashlytics_export_strings.xml
+
+# Claves y certificados
 *.keystore
 *.jks
+*.p12
+*.pem
+*.key
 *.env
+.env
+.env.*
+
+# Archivos de configuración con claves API
+**/apikeys.properties
+**/secrets.properties
+**/api_keys.xml
+**/config.properties
+/app/src/main/assets/config.json
+/app/src/main/res/values/api_keys.xml
+/app/src/main/res/values/secrets.xml
 
 # =========================
 # Archivos de pruebas locales

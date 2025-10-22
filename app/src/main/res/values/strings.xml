@@ -36,4 +36,58 @@
     <string name="new_user_text">¿Nuevo usuario?</string>
     <string name="register_text">Regístrate</string>
 
+    <!-- Authentication strings -->
+    <string name="error_invalid_email">Por favor ingresa un correo válido</string>
+    <string name="error_short_password">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="error_email_required">El correo es obligatorio</string>
+    <string name="error_password_required">La contraseña es obligatoria</string>
+    <string name="login_success">Inicio de sesión exitoso</string>
+    <string name="login_failed">Error al iniciar sesión</string>
+    <string name="registration_success">Registro exitoso</string>
+    <string name="registration_failed">Error al registrarse</string>
+    <string name="verification_email_sent">Se ha enviado un correo de verificación</string>
+    <string name="email_not_verified">Por favor verifica tu correo electrónico antes de continuar</string>
+    <string name="resend_verification">Reenviar verificación</string>
+    <string name="reset_password_sent">Se ha enviado un enlace para restablecer la contraseña</string>
+    <string name="reset_password_failed">Error al enviar el enlace de restablecimiento</string>
+    <string name="user_not_found">Usuario no encontrado</string>
+    <string name="invalid_credentials">Credenciales inválidas</string>
+    <string name="weak_password">La contraseña es muy débil</string>
+    <string name="email_already_in_use">El correo ya está en uso</string>
+    <string name="network_error">Error de conexión</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="full_name">Nombre completo</string>
+    <string name="create_account">Crear cuenta</string>
+    <string name="have_account">¿Ya tienes cuenta?</string>
+    <string name="sign_in">Iniciar sesión</string>
+
+    <!-- Profile Photo strings -->
+    <string name="profile_photo_description">Foto de perfil del usuario</string>
+    <string name="add_photo_description">Agregar foto de perfil</string>
+    <string name="profile_photo_label">Foto de perfil</string>
+    <string name="profile_photo_hint">Toca para agregar foto</string>
+
+    <!-- Phone Number strings -->
+    <string name="phone_number_label">Número de teléfono</string>
+    <string name="phone_number_hint">123 456 789</string>
+    <string name="country_flag_description">Bandera del país</string>
+    <string name="dropdown_icon_description">Seleccionar código de país</string>
+
+    <!-- Location strings -->
+    <string name="location_label">Ubicación</string>
+    <string name="location_hint">Ciudad, País</string>
+    <string name="location_icon_description">Icono de ubicación</string>
+    <string name="location_target_description">Usar mi ubicación actual</string>
+
+    <!-- Biography strings -->
+    <string name="biography_label">Biografía (opcional)</string>
+    <string name="biography_hint">Cuéntanos un poco sobre ti y tus intereses...</string>
+
+    <!-- Terms and Privacy strings -->
+    <string name="terms_conditions_text">Acepto los Términos y Condiciones de SkillSwap</string>
+    <string name="privacy_policy_text">Acepto la Política de Privacidad de SkillSwap</string>
+    <string name="default_country_code">+34</string>
+    <string name="biography_counter">0/200</string>
+
 </resources>
