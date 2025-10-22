@@ -1,25 +1,70 @@
-<<<<<<< HEAD
-/.idea
-.gradle
-/local.properties
-=======
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
->>>>>>> 4744f3e (Inicio de Proyecto)
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-<<<<<<< HEAD
-*.iml
-=======
+# =========================
+# Android / Gradle general
+# =========================
+.gradle/
+build/
+*/build/
 local.properties
->>>>>>> 4744f3e (Inicio de Proyecto)
+.gradle/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.aab
+*.aar
+.gradle/
+
+# =========================
+# IntelliJ / Android Studio
+# =========================
+.idea/
+*.iml
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# =========================
+# Configuración del sistema
+# =========================
+.DS_Store
+Thumbs.db
+*.log
+
+# =========================
+# Archivos de dependencias
+# =========================
+# Se regeneran con gradle
+.gradle/
+.gradle/**
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# =========================
+# Archivos de entorno y claves
+# =========================
+/app/google-services.json
+/app/src/**/google-services.json
+/app/src/**/debug/google-services.json
+/app/src/**/release/google-services.json
+*.keystore
+*.jks
+*.env
+
+# =========================
+# Archivos de pruebas locales
+# =========================
+/test-results/
+/outputs/
+
+# =========================
+# Archivos temporales
+# =========================
+*.tmp
+*.temp
+*.swp
+*.bak
+*.orig
