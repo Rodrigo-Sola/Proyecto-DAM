@@ -3,36 +3,61 @@ package sv.edu.itca.proyecto_dam;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.credentials.Credential;
+import androidx.credentials.CredentialManager;
+import androidx.credentials.CredentialManagerCallback;
+import androidx.credentials.CustomCredential;
+import androidx.credentials.GetCredentialRequest;
+import androidx.credentials.GetCredentialResponse;
+import androidx.credentials.exceptions.GetCredentialException;
 
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Actividad principal que maneja el login de usuarios
- * Incluye autenticación con Firebase y verificación de correo electrónico
+ * Incluye autenticación con Firebase (email/password y Google Sign-In)
+ * y verificación de correo electrónico
  */
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     // Componentes de la UI
     private TextInputEditText etEmail, etPassword;
     private MaterialButton btnLogin;
     private TextView tvForgotPassword, tvSignUpLink;
+    private LinearLayout llGoogleLogin;
 
     // Firebase Authentication
     private FirebaseAuth firebaseAuth;
+
+    // Credential Manager para Google Sign-In
+    private CredentialManager credentialManager;
+    private Executor executor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         setupClickListeners();
         setupWindowInsets();
         checkIfUserLoggedIn();
+        initializeGoogleSignIn();
     }
 
     /**
@@ -63,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvSignUpLink = findViewById(R.id.tvSignUpLink);
+        llGoogleLogin = findViewById(R.id.llGoogleLogin);
     }
 
     /**
@@ -72,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> loginUser());
         tvForgotPassword.setOnClickListener(v -> showForgotPasswordDialog());
         tvSignUpLink.setOnClickListener(v -> navigateToRegister());
+        llGoogleLogin.setOnClickListener(v -> googleSignIn());
     }
 
     /**
@@ -152,16 +180,10 @@ public class MainActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Verificación de Correo")
                 .setMessage(getString(R.string.email_not_verified))
-                .setPositiveButton(getString(R.string.resend_verification), (dialog, which) -> {
-                    sendVerificationEmail(user);
-                })
-                .setNegativeButton("Más tarde", (dialog, which) -> {
-                    // Permitir acceso pero mostrar advertencia
-                    navigateToHome();
-                })
-                .setNeutralButton("Cerrar Sesión", (dialog, which) -> {
-                    firebaseAuth.signOut();
-                })
+                .setPositiveButton(getString(R.string.resend_verification), (dialog, which) ->
+                    sendVerificationEmail(user))
+                .setNegativeButton("Más tarde", (dialog, which) -> navigateToHome())
+                .setNeutralButton("Cerrar Sesión", (dialog, which) -> firebaseAuth.signOut())
                 .show();
     }
 
@@ -313,5 +335,196 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Inicializa Google Sign-In con Credential Manager
+     */
+    private void initializeGoogleSignIn() {
+        credentialManager = CredentialManager.create(this);
+        executor = Executors.newSingleThreadExecutor();
+    }
+
+    /**
+     * Inicia el flujo de autenticación con Google
+     */
+    private void googleSignIn() {
+        try {
+            // Configurar opciones de Google ID
+            GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
+                    .setFilterByAuthorizedAccounts(false) // Permitir todas las cuentas, no solo las autorizadas
+                    .setServerClientId(getString(R.string.default_web_client_id))
+                    .setAutoSelectEnabled(false) // No autoseleccionar
+                    .setNonce(null) // Opcional: agregar nonce para seguridad adicional
+                    .build();
+
+            // Crear request de credenciales
+            GetCredentialRequest request = new GetCredentialRequest.Builder()
+                    .addCredentialOption(googleIdOption)
+                    .build();
+
+            // Mostrar mensaje al usuario
+            showToast("Iniciando sesión con Google...");
+
+            Log.d(TAG, "Iniciando Google Sign-In con Web Client ID: " + getString(R.string.default_web_client_id));
+
+            // Solicitar credenciales de forma asíncrona
+            credentialManager.getCredentialAsync(
+                    this,
+                    request,
+                    null,
+                    executor,
+                    new CredentialManagerCallback<>() {
+                        @Override
+                        public void onResult(GetCredentialResponse result) {
+                            Log.d(TAG, "Google Sign-In exitoso, procesando resultado");
+                            handleGoogleSignInResult(result);
+                        }
+
+                        @Override
+                        public void onError(@NonNull GetCredentialException e) {
+                            Log.e(TAG, "Error en getCredentialAsync: " + e.getClass().getName() + " - " + e.getMessage(), e);
+                            runOnUiThread(() -> handleGoogleSignInError(e));
+                        }
+                    }
+            );
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error al iniciar Google Sign-In", e);
+            showToast("Error al iniciar sesión con Google: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Maneja el resultado exitoso de Google Sign-In
+     */
+    private void handleGoogleSignInResult(GetCredentialResponse result) {
+        Credential credential = result.getCredential();
+        Log.d(TAG, "Tipo de credencial recibida: " + credential.getType());
+
+        if (credential instanceof CustomCredential) {
+            CustomCredential customCredential = (CustomCredential) credential;
+            if (GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL.equals(customCredential.getType())) {
+                try {
+                    // Extraer el Google ID Token
+                    GoogleIdTokenCredential googleIdTokenCredential =
+                            GoogleIdTokenCredential.createFrom(customCredential.getData());
+
+                    String idToken = googleIdTokenCredential.getIdToken();
+                    Log.d(TAG, "Google ID Token obtenido exitosamente");
+
+                    // Autenticar con Firebase en el hilo principal
+                    runOnUiThread(() -> firebaseAuthWithGoogle(idToken));
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Error al parsear Google ID Token", e);
+                    runOnUiThread(() -> showToast("Error al procesar credenciales de Google"));
+                }
+            } else {
+                Log.e(TAG, "Tipo de credencial no esperado: " + customCredential.getType());
+                runOnUiThread(() -> showToast("Tipo de credencial no válido"));
+            }
+        } else {
+            Log.e(TAG, "Credencial no es de tipo CustomCredential");
+            runOnUiThread(() -> showToast("Error en el tipo de credencial"));
+        }
+    }
+
+    /**
+     * Maneja los errores de Google Sign-In
+     */
+    private void handleGoogleSignInError(GetCredentialException e) {
+        Log.e(TAG, "Error en Google Sign-In", e);
+
+        String errorMessage;
+        String errorType = e.getClass().getSimpleName();
+
+        Log.d(TAG, "Tipo de error: " + errorType);
+        Log.d(TAG, "Mensaje de error: " + e.getMessage());
+
+        // Manejar diferentes tipos de errores específicos
+        if (e.getType() != null) {
+            Log.d(TAG, "Error type: " + e.getType());
+        }
+
+        if (e.getMessage() != null) {
+            String message = e.getMessage().toLowerCase();
+
+            if (message.contains("no credentials available") || message.contains("no credential")) {
+                errorMessage = "No hay cuentas de Google configuradas en este dispositivo.\n\n" +
+                        "Por favor:\n" +
+                        "1. Ve a Configuración → Cuentas\n" +
+                        "2. Agrega una cuenta de Google\n" +
+                        "3. Intenta nuevamente";
+
+                // Mostrar un diálogo más informativo
+                runOnUiThread(() -> showGoogleSignInErrorDialog(errorMessage));
+                return;
+
+            } else if (message.contains("canceled") || message.contains("cancelled")) {
+                errorMessage = "Inicio de sesión cancelado";
+
+            } else if (message.contains("network")) {
+                errorMessage = "Error de conexión. Verifica tu internet";
+
+            } else if (message.contains("16:")) {
+                // Error de configuración de Google Sign-In
+                errorMessage = "Error de configuración.\n" +
+                        "Verifica que Google Sign-In esté habilitado en Firebase Console";
+
+            } else {
+                errorMessage = "Error al iniciar sesión con Google: " + e.getMessage();
+            }
+        } else {
+            errorMessage = "Error desconocido al iniciar sesión con Google";
+        }
+
+        showToast(errorMessage);
+    }
+
+    /**
+     * Muestra un diálogo detallado de error de Google Sign-In
+     */
+    private void showGoogleSignInErrorDialog(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle("Error de Google Sign-In")
+                .setMessage(message)
+                .setPositiveButton("Entendido", null)
+                .setNegativeButton("Configurar cuenta", (dialog, which) -> {
+                    // Intentar abrir la configuración de cuentas
+                    try {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_SYNC_SETTINGS);
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        showToast("No se pudo abrir la configuración de cuentas");
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * Autentica con Firebase usando el token de Google
+     */
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Login exitoso con Google
+                        Log.d(TAG, "signInWithCredential:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                        if (user != null) {
+                            String displayName = user.getDisplayName() != null ? user.getDisplayName() : "";
+                            showToast("¡Bienvenido " + displayName + "!");
+                            navigateToHome();
+                        }
+                    } else {
+                        // Error en autenticación con Firebase
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        handleLoginError(task.getException());
+                    }
+                });
     }
 }
