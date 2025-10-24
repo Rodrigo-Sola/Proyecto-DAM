@@ -19,7 +19,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.credentials.Credential;
+import androidx.credentials.CredentialManager;
+import androidx.credentials.CredentialManagerCallback;
+import androidx.credentials.CustomCredential;
+import androidx.credentials.GetCredentialRequest;
+import androidx.credentials.GetCredentialResponse;
+import androidx.credentials.exceptions.GetCredentialException;
 
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
@@ -29,9 +38,12 @@ import com.google.firebase.auth.OAuthProvider;
 
 /**
  * Actividad principal que maneja el login de usuarios
- * Incluye autenticación con Firebase y verificación de correo electrónico
+ * Incluye autenticación con Firebase (email/password y Google Sign-In)
+ * y verificación de correo electrónico
  */
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     // Componentes de la UI
     private TextInputEditText etEmail, etPassword;
@@ -57,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         setupClickListeners();
         setupWindowInsets();
         checkIfUserLoggedIn();
+        initializeGoogleSignIn();
     }
 
     /**
@@ -166,16 +179,10 @@ public class MainActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Verificación de Correo")
                 .setMessage(getString(R.string.email_not_verified))
-                .setPositiveButton(getString(R.string.resend_verification), (dialog, which) -> {
-                    sendVerificationEmail(user);
-                })
-                .setNegativeButton("Más tarde", (dialog, which) -> {
-                    // Permitir acceso pero mostrar advertencia
-                    navigateToHome();
-                })
-                .setNeutralButton("Cerrar Sesión", (dialog, which) -> {
-                    firebaseAuth.signOut();
-                })
+                .setPositiveButton(getString(R.string.resend_verification), (dialog, which) ->
+                    sendVerificationEmail(user))
+                .setNegativeButton("Más tarde", (dialog, which) -> navigateToHome())
+                .setNeutralButton("Cerrar Sesión", (dialog, which) -> firebaseAuth.signOut())
                 .show();
     }
 

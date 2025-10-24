@@ -252,17 +252,18 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:contentDescription="@string/github_login_desc"
-                    android:src="@drawable/github_color_svgrepo_com"
+                    android:contentDescription="@string/facebook_login_desc"
+                    android:src="@drawable/facebook_svgrepo_com"
                     tools:ignore="ImageContrastCheck" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="@string/github_text"
-                    android:textColor="#616161"
-                    android:textSize="12sp" />
+                    android:text="@string/facebook_text"
+                    android:textColor="#757575"
+                    android:textSize="12sp"
+                    tools:ignore="TextContrastCheck" />
 
             </LinearLayout>
 
