@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -31,8 +30,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
-
-import java.util.concurrent.Executors;
 
 /**
  * Actividad principal que maneja el login de usuarios
@@ -65,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         setupClickListeners();
         setupWindowInsets();
         checkIfUserLoggedIn();
-        initializeGoogleSignIn();
     }
 
     /**
@@ -346,6 +342,7 @@ public class MainActivity extends AppCompatActivity {
         GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
                 .setServerClientId(getString(R.string.default_web_client_id))
+                .setAutoSelectEnabled(true)
                 .build();
 
         GetCredentialRequest request = new GetCredentialRequest.Builder()
@@ -366,7 +363,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(androidx.credentials.exceptions.GetCredentialException e) {
                         Log.e(TAG, "Error getting credential", e);
-                        showToast("Error al iniciar sesión con Google: " + e.getMessage());
+                        String errorMsg = "Error al iniciar sesión con Google";
+                        if (e.getMessage() != null && e.getMessage().contains("No credentials available")) {
+                            errorMsg = "No hay cuentas de Google disponibles. Por favor, añade una cuenta primero.";
+                        } else if (e.getMessage() != null) {
+                            errorMsg = "Error: " + e.getMessage();
+                        }
+                        showToast(errorMsg);
                     }
                 }
         );
@@ -378,15 +381,32 @@ public class MainActivity extends AppCompatActivity {
     private void handleGoogleSignIn(GetCredentialResponse result) {
         Credential credential = result.getCredential();
 
-        if (credential instanceof GoogleIdTokenCredential) {
+        Log.d(TAG, "Credential type: " + credential.getType());
+
+        // Verificar si es una credencial de Google ID Token
+        if (GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL.equals(credential.getType())) {
+            try {
+                GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.getData());
+                String idToken = googleIdTokenCredential.getIdToken();
+
+                Log.d(TAG, "Google ID Token obtenido correctamente");
+
+                // Autenticar con Firebase usando el token de Google
+                firebaseAuthWithGoogle(idToken);
+            } catch (Exception e) {
+                Log.e(TAG, "Error al crear GoogleIdTokenCredential", e);
+                showToast("Error al procesar las credenciales: " + e.getMessage());
+            }
+        } else if (credential instanceof GoogleIdTokenCredential) {
+            // Fallback para el método anterior
             GoogleIdTokenCredential googleIdTokenCredential = (GoogleIdTokenCredential) credential;
             String idToken = googleIdTokenCredential.getIdToken();
 
-            // Autenticar con Firebase usando el token de Google
+            Log.d(TAG, "Google ID Token obtenido (método alternativo)");
             firebaseAuthWithGoogle(idToken);
         } else {
-            Log.e(TAG, "Unexpected type of credential");
-            showToast("Error al procesar credenciales de Google");
+            Log.e(TAG, "Tipo de credencial no soportado: " + credential.getType());
+            showToast("Tipo de credencial no compatible. Por favor, intenta nuevamente.");
         }
     }
 
