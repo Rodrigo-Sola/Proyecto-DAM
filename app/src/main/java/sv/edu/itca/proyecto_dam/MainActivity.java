@@ -3,12 +3,17 @@ package sv.edu.itca.proyecto_dam;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -17,8 +22,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.OAuthProvider;
 
 /**
  * Actividad principal que maneja el login de usuarios
@@ -30,9 +37,14 @@ public class MainActivity extends AppCompatActivity {
     private TextInputEditText etEmail, etPassword;
     private MaterialButton btnLogin;
     private TextView tvForgotPassword, tvSignUpLink;
+    private LinearLayout llGithubLogin;
 
     // Firebase Authentication
     private FirebaseAuth firebaseAuth;
+
+    // Constantes para logging
+    private static final String TAG = "MainActivity";
+    private static final String GITHUB_PROVIDER_ID = "github.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvSignUpLink = findViewById(R.id.tvSignUpLink);
+        llGithubLogin = findViewById(R.id.llGithubLogin);
     }
 
     /**
@@ -72,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> loginUser());
         tvForgotPassword.setOnClickListener(v -> showForgotPasswordDialog());
         tvSignUpLink.setOnClickListener(v -> navigateToRegister());
+        llGithubLogin.setOnClickListener(v -> loginWithGithub());
     }
 
     /**
@@ -313,5 +327,28 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Inicia sesión con GitHub
+     */
+    private void loginWithGithub() {
+        // Configurar proveedor de GitHub
+        OAuthProvider.Builder provider = OAuthProvider.newBuilder(GITHUB_PROVIDER_ID);
+
+        // Iniciar el flujo de inicio de sesión
+        firebaseAuth.startActivityForSignInWithProvider(this, provider.build())
+                .addOnSuccessListener(this, authResult -> {
+                    // Login exitoso
+                    FirebaseUser user = authResult.getUser();
+                    if (user != null) {
+                        checkEmailVerification(user);
+                    }
+                })
+                .addOnFailureListener(this, e -> {
+                    // Manejar errores
+                    Log.e(TAG, "Error en login con GitHub: " + e.getMessage());
+                    showToast("Error al iniciar sesión con GitHub");
+                });
     }
 }

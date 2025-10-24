@@ -90,4 +90,9 @@
     <string name="default_country_code">+34</string>
     <string name="biography_counter">0/200</string>
 
+    <!-- GitHub Authentication strings -->
+    <string name="github_login_success">Inicio de sesión con GitHub exitoso</string>
+    <string name="github_login_failed">Error al iniciar sesión con GitHub</string>
+    <string name="github_login_cancelled">Inicio de sesión cancelado</string>
+
 </resources>
