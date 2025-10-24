@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         setupClickListeners();
         setupWindowInsets();
         checkIfUserLoggedIn();
+        initializeGoogleSignIn();
     }
 
     /**
@@ -181,16 +182,10 @@ public class MainActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Verificación de Correo")
                 .setMessage(getString(R.string.email_not_verified))
-                .setPositiveButton(getString(R.string.resend_verification), (dialog, which) -> {
-                    sendVerificationEmail(user);
-                })
-                .setNegativeButton("Más tarde", (dialog, which) -> {
-                    // Permitir acceso pero mostrar advertencia
-                    navigateToHome();
-                })
-                .setNeutralButton("Cerrar Sesión", (dialog, which) -> {
-                    firebaseAuth.signOut();
-                })
+                .setPositiveButton(getString(R.string.resend_verification), (dialog, which) ->
+                    sendVerificationEmail(user))
+                .setNegativeButton("Más tarde", (dialog, which) -> navigateToHome())
+                .setNeutralButton("Cerrar Sesión", (dialog, which) -> firebaseAuth.signOut())
                 .show();
     }
 
