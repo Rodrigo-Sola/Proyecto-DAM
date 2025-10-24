@@ -90,4 +90,7 @@
     <string name="default_country_code">+34</string>
     <string name="biography_counter">0/200</string>
 
+    <!-- Google Sign-In -->
+    <string name="default_web_client_id">304174422931-de9daiagarapld5at6b4hlt7t29qi9qa.apps.googleusercontent.com</string>
+
 </resources>
