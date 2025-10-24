@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="sv.edu.itca.proyecto_dam" />
-                  <option name="mobileSdkAppId" value="1:304174422931:android:9a76ad10c6cb08d8d4e666" />
-                  <option name="projectId" value="proyecto-dam-ee1a4" />
-                  <option name="projectNumber" value="304174422931" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
