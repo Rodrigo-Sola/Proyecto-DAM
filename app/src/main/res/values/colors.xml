@@ -7,4 +7,5 @@
     <color name="fondo_principal">#FBF7F1</color>
     <color name="texto_oscuro">#3C2F2D</color>
     <color name="terciario">#EBE0D3</color>
+    <color name="background_skillzone">#E8E1D3</color>
 </resources>
