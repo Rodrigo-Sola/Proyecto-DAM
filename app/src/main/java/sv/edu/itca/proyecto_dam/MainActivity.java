@@ -3,8 +3,10 @@ package sv.edu.itca.proyecto_dam;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,25 +16,40 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.credentials.Credential;
+import androidx.credentials.CredentialManager;
+import androidx.credentials.GetCredentialRequest;
+import androidx.credentials.GetCredentialResponse;
 
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.OAuthProvider;
 
 /**
  * Actividad principal que maneja el login de usuarios
- * Incluye autenticación con Firebase y verificación de correo electrónico
+ * Incluye autenticación con Firebase, Google y GitHub
  */
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     // Componentes de la UI
     private TextInputEditText etEmail, etPassword;
     private MaterialButton btnLogin;
     private TextView tvForgotPassword, tvSignUpLink;
+    private LinearLayout llGoogleLogin, llGitHubLogin;
 
     // Firebase Authentication
     private FirebaseAuth firebaseAuth;
+
+    // Credential Manager para Google Sign-In
+    private CredentialManager credentialManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initializeFirebase() {
         firebaseAuth = FirebaseAuth.getInstance();
+        credentialManager = CredentialManager.create(this);
     }
 
     /**
@@ -63,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvSignUpLink = findViewById(R.id.tvSignUpLink);
+        llGoogleLogin = findViewById(R.id.llGoogleLogin);
+        llGitHubLogin = findViewById(R.id.llGitHubLogin);
     }
 
     /**
@@ -72,6 +92,12 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(v -> loginUser());
         tvForgotPassword.setOnClickListener(v -> showForgotPasswordDialog());
         tvSignUpLink.setOnClickListener(v -> navigateToRegister());
+
+        // Autenticación con Google
+        llGoogleLogin.setOnClickListener(v -> signInWithGoogle());
+
+        // Autenticación con GitHub
+        llGitHubLogin.setOnClickListener(v -> signInWithGithub());
     }
 
     /**
@@ -152,16 +178,10 @@ public class MainActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Verificación de Correo")
                 .setMessage(getString(R.string.email_not_verified))
-                .setPositiveButton(getString(R.string.resend_verification), (dialog, which) -> {
-                    sendVerificationEmail(user);
-                })
-                .setNegativeButton("Más tarde", (dialog, which) -> {
-                    // Permitir acceso pero mostrar advertencia
-                    navigateToHome();
-                })
-                .setNeutralButton("Cerrar Sesión", (dialog, which) -> {
-                    firebaseAuth.signOut();
-                })
+                .setPositiveButton(getString(R.string.resend_verification), (dialog, which) ->
+                    sendVerificationEmail(user))
+                .setNegativeButton("Más tarde", (dialog, which) -> navigateToHome())
+                .setNeutralButton("Cerrar Sesión", (dialog, which) -> firebaseAuth.signOut())
                 .show();
     }
 
@@ -313,5 +333,127 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Inicia el flujo de autenticación con Google usando Credential Manager
+     */
+    private void signInWithGoogle() {
+        GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
+                .setFilterByAuthorizedAccounts(false)
+                .setServerClientId(getString(R.string.default_web_client_id))
+                .setAutoSelectEnabled(true)
+                .build();
+
+        GetCredentialRequest request = new GetCredentialRequest.Builder()
+                .addCredentialOption(googleIdOption)
+                .build();
+
+        credentialManager.getCredentialAsync(
+                this,
+                request,
+                null,
+                getMainExecutor(),
+                new androidx.credentials.CredentialManagerCallback<GetCredentialResponse, androidx.credentials.exceptions.GetCredentialException>() {
+                    @Override
+                    public void onResult(GetCredentialResponse result) {
+                        handleGoogleSignIn(result);
+                    }
+
+                    @Override
+                    public void onError(androidx.credentials.exceptions.GetCredentialException e) {
+                        Log.e(TAG, "Error getting credential", e);
+                        String errorMsg = "Error al iniciar sesión con Google";
+                        if (e.getMessage() != null && e.getMessage().contains("No credentials available")) {
+                            errorMsg = "No hay cuentas de Google disponibles. Por favor, añade una cuenta primero.";
+                        } else if (e.getMessage() != null) {
+                            errorMsg = "Error: " + e.getMessage();
+                        }
+                        showToast(errorMsg);
+                    }
+                }
+        );
+    }
+
+    /**
+     * Maneja el resultado de la autenticación con Google
+     */
+    private void handleGoogleSignIn(GetCredentialResponse result) {
+        Credential credential = result.getCredential();
+
+        Log.d(TAG, "Credential type: " + credential.getType());
+
+        // Verificar si es una credencial de Google ID Token
+        if (GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL.equals(credential.getType())) {
+            try {
+                GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.getData());
+                String idToken = googleIdTokenCredential.getIdToken();
+
+                Log.d(TAG, "Google ID Token obtenido correctamente");
+
+                // Autenticar con Firebase usando el token de Google
+                firebaseAuthWithGoogle(idToken);
+            } catch (Exception e) {
+                Log.e(TAG, "Error al crear GoogleIdTokenCredential", e);
+                showToast("Error al procesar las credenciales: " + e.getMessage());
+            }
+        } else if (credential instanceof GoogleIdTokenCredential) {
+            // Fallback para el método anterior
+            GoogleIdTokenCredential googleIdTokenCredential = (GoogleIdTokenCredential) credential;
+            String idToken = googleIdTokenCredential.getIdToken();
+
+            Log.d(TAG, "Google ID Token obtenido (método alternativo)");
+            firebaseAuthWithGoogle(idToken);
+        } else {
+            Log.e(TAG, "Tipo de credencial no soportado: " + credential.getType());
+            showToast("Tipo de credencial no compatible. Por favor, intenta nuevamente.");
+        }
+    }
+
+    /**
+     * Autentica con Firebase usando el token de Google
+     */
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "signInWithCredential:success");
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (user != null) {
+                            showToast("Bienvenido " + user.getDisplayName());
+                            navigateToHome();
+                        }
+                    } else {
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        showToast("Error en autenticación: " +
+                                (task.getException() != null ? task.getException().getMessage() : "Desconocido"));
+                    }
+                });
+    }
+
+    /**
+     * Inicia el flujo de autenticación con GitHub
+     */
+    private void signInWithGithub() {
+        OAuthProvider.Builder provider = OAuthProvider.newBuilder("github.com");
+
+        // Opcional: solicitar scopes adicionales
+        // provider.setScopes(Arrays.asList("user:email"));
+
+        firebaseAuth.startActivityForSignInWithProvider(this, provider.build())
+                .addOnSuccessListener(authResult -> {
+                    Log.d(TAG, "signInWithGitHub:success");
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        showToast("Bienvenido " + user.getDisplayName());
+                        navigateToHome();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "signInWithGitHub:failure", e);
+                    showToast("Error al iniciar sesión con GitHub: " + e.getMessage());
+                });
     }
 }
