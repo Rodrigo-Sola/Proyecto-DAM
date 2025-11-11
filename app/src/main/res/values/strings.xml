@@ -90,4 +90,11 @@
     <string name="default_country_code">+34</string>
     <string name="biography_counter">0/200</string>
 
+    <!-- barra de busqueda strings -->
+    <string name="search">Buscar</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="save">Guardar</string>
+    <string name="profile_pic">Foto de perfil</string>
+    <string name="distance">Distancia</string>
+
 </resources>
