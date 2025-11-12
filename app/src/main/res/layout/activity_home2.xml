@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo_principal"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".Home2Activity">
+
+    <!-- Título Nuevas Coincidencias -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nuevas Coincidencias"
+        android:textColor="@color/texto_oscuro"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Scroll horizontal para las coincidencias -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Primera tarjeta de coincidencia -->
+            <LinearLayout
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/terciario"
+                android:padding="16dp"
+                android:layout_marginEnd="12dp"
+                android:elevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Imagen de perfil -->
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/profile_photo_background"
+                        android:layout_marginEnd="12dp" />
+
+                    <!-- Información del perfil -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/nombreUsuario1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Carlos Rodríguez"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="2dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4.8"
+                                android:textColor="@color/texto_oscuro"
+                                android:textSize="12sp" />
+
+                            <!-- Aquí podrías agregar un RatingBar para las estrellas -->
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Enseña:"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="12sp"
+                            android:layout_marginTop="6dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fluiter\nReact Native\nUI/UX"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Botones -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:text="Ver Perfil"
+                        android:textColor="@color/fondo_principal"
+                        android:backgroundTint="@color/primario"
+                        android:textSize="12sp"
+                        android:layout_marginEnd="6dp" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:text="Conectar"
+                        android:textColor="@color/texto_oscuro"
+                        android:backgroundTint="@color/secundario"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Segunda tarjeta de coincidencia -->
+            <LinearLayout
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/terciario"
+                android:padding="16dp"
+                android:layout_marginEnd="12dp"
+                android:elevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Imagen de perfil -->
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/profile_photo_background"
+                        android:layout_marginEnd="12dp" />
+
+                    <!-- Información del perfil -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/nombreUsuario2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ana Martínez"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Enseña:"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="12sp"
+                            android:layout_marginTop="6dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Inglés"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Botones -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:text="Ver Perfil"
+                        android:textColor="@color/fondo_principal"
+                        android:backgroundTint="@color/primario"
+                        android:textSize="12sp"
+                        android:layout_marginEnd="6dp" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:text="Conectar"
+                        android:textColor="@color/texto_oscuro"
+                        android:backgroundTint="@color/secundario"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Tercera tarjeta de coincidencia (adicional para el scroll) -->
+            <LinearLayout
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/terciario"
+                android:padding="16dp"
+                android:elevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Imagen de perfil -->
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/profile_photo_background"
+                        android:layout_marginEnd="12dp" />
+
+                    <!-- Información del perfil -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/nombreUsuario3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="María López"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="2dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4.9"
+                                android:textColor="@color/texto_oscuro"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Enseña:"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="12sp"
+                            android:layout_marginTop="6dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Guitarra\nPiano"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Botones -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:text="Ver Perfil"
+                        android:textColor="@color/fondo_principal"
+                        android:backgroundTint="@color/primario"
+                        android:textSize="12sp"
+                        android:layout_marginEnd="6dp" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="1"
+                        android:text="Conectar"
+                        android:textColor="@color/texto_oscuro"
+                        android:backgroundTint="@color/secundario"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Enlace "Ver todas" -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ver todas"
+        android:textColor="@color/primario"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:gravity="end"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Sección de Sesiones Pendientes -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sesiones Pendientes"
+        android:textColor="@color/texto_oscuro"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Tarjeta de sesión 1 -->
+
+    <!-- Tarjeta de sesión 2 -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Primera sesión -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/terciario"
+                android:padding="16dp"
+                android:layout_marginBottom="12dp"
+                android:elevation="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Programación en Flu..."
+                    android:textColor="@color/texto_oscuro"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="con Carlos Rodríguez"
+                    android:textColor="@color/texto_oscuro"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="22:22 - 12/11/2025"
+                    android:textColor="@color/texto_oscuro"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Confirmada"
+                    android:textColor="@color/primario"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Segunda sesión -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/terciario"
+                android:padding="16dp"
+                android:layout_marginBottom="24dp"
+                android:elevation="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Conversación en Inglés"
+                    android:textColor="@color/texto_oscuro"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="con Ana Martínez"
+                    android:textColor="@color/texto_oscuro"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:22 - 14/11/2025"
+                    android:textColor="@color/texto_oscuro"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pendiente"
+                    android:textColor="@color/secundario"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+
+            <!-- Puedes agregar más sesiones aquí si necesitas -->
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#FFFFFF"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu" />
+
+</LinearLayout>
