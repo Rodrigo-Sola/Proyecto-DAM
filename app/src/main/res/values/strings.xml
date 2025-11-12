@@ -99,5 +99,35 @@
 
     <!-- Google Sign-In -->
     <string name="default_web_client_id">304174422931-de9daiagarapld5at6b4hlt7t29qi9qa.apps.googleusercontent.com</string>
+    <string name="verificaciones">Verificaciones</string>
+    <string name="email_verificado">• Email verificado</string>
+    <string name="identidad_verificada">• Identidad verificada</string>
+    <string name="contenido_de_habilidades">Contenido de Habilidades</string>
+    <string name="madrid_espa_a">Madrid, España</string>
+    <string name="mar_a_gonz_lez">María González</string>
+    <string name="foto_de_perfil_de_mar_a_gonz_lez">Foto de perfil de María González</string>
+    <string name="solicitar_intercambio">Solicitar Intercambio</string>
+    <string name="sobre_m">Sobre Mí</string>
+    <string name="rese_as">Reseñas</string>
+    <string name="habilidades">Habilidades</string>
+    <string name="tecnolog_a_n_marketing_digital_n_programaci_n_n_dise_o_n_emprendimiento">• Tecnología\n• Marketing Digital\n• Programación\n• Diseño\n• Emprendimiento</string>
+    <string name="soy_mar_a_especialista_en_marketing_digital_con_m_s_de_5_a_os_de_experiencia_en_el_sector_me_apasiona_compartir_conocimientos_y_aprender_de_los_dem_s_a_trav_s_del_intercambio_de_habilidades">Soy María, especialista en marketing digital con más de 5 años de experiencia en el sector. Me apasiona compartir conocimientos y aprender de los demás a través del intercambio de habilidades.</string>
+    <string name="sobre_mg">Sobre Mí</string>
+    <string name="excelente_experiencia_intercambiando_conocimientos_de_marketing_digital_por_programaci_n_mar_a_es_muy_paciente_y_explica_muy_bien_los_conceptos">Excelente experiencia intercambiando conocimientos de marketing digital por programación. María es muy paciente y explica muy bien los conceptos.</string>
+    <string name="intereses">Intereses:</string>
+    <string name="kk">★★★★★</string>
+    <string name="hace_1_semana">Hace 1 semana</string>
+    <string name="carlos_mendoza">Carlos Mendoza</string>
+    <string name="gesti_n_de_proyectos">• Gestión de Proyectos</string>
+    <string name="dise_o_gr_fico">• Diseño Gráfico</string>
+    <string name="programaci_n">• Programación</string>
+    <string name="marketing_digital">• Marketing Digital</string>
+    <string name="tel_fono_verificado">• Teléfono verificado</string>
+    <string name="noso">Madrid, España</string>
+    <string name="mar_a_gonz_lezu">María González</string>
+    <string name="m">Foto de perfil de María González</string>
+    <string name="solicitar_intercambioH">Solicitar Intercambio</string>
+    <string name="sobre_mi">Sobre Mí</string>
+    <string name="email_verificado1">• Email verificado</string>
 
 </resources>

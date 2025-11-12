@@ -21,8 +21,6 @@
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp">
 
-
-
             <!-- First Card - Clases de Guitarra Española -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -142,9 +140,6 @@
                         app:backgroundTint="#C08968" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-            <!-- Solicitada section -->
-
 
             <!-- Second Card - Busco Profesor de Programación Python -->
             <androidx.cardview.widget.CardView
@@ -286,6 +281,5 @@
         android:background="#FFFFFF"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
-
 
 </LinearLayout>

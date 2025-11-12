@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_skillzone"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/ivlogo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/app_name"
+        app:srcCompat="@drawable/logoskillzone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintHeight_percent="0.35"
+        android:alpha="0" />
+
+    <!-- Imagen Bienvenido (al lado derecho del logo) -->
+    <ImageView
+        android:id="@+id/ivBienvenido"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/bienvenido"
+        android:alpha="0"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:contentDescription="Bienvenido"
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Contenedor para la barra y la estrella -->
+    <FrameLayout
+        android:id="@+id/progressContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Barra de progreso -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="@color/primario"
+            android:progressBackgroundTint="#4DFFFFFF" />
+
+        <!-- Resplandor de la estrella (círculo detrás) -->
+        <View
+            android:id="@+id/starGlow"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="start|center_vertical"
+            android:background="@drawable/star_glow"
+            android:visibility="invisible" />
+
+        <!-- Estrella que se mueve -->
+        <ImageView
+            android:id="@+id/ivStar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start|center_vertical"
+            android:src="@drawable/star"
+            android:contentDescription="Progress Star" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
