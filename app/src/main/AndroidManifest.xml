@@ -24,7 +24,6 @@
             android:name=".principal"
             android:exported="false" />
         <activity
-            android:name=".OnboardingActivity"
             android:name=".SplashScreen"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
@@ -49,7 +48,6 @@
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
-            android:exported="false"/>
 
     </application>
 
