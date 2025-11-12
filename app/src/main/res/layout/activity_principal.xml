@@ -21,8 +21,6 @@
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp">
 
-
-
             <!-- First Card - Clases de Guitarra Española -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -52,7 +50,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:marginBottom="12dp">
+                        android:layout_marginBottom="12dp">
 
                         <ImageView
                             android:layout_width="40dp"
@@ -66,12 +64,12 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:marginStart="12dp">
+                            android:layout_marginStart="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:marginBottom="8dp"
+                                android:layout_marginBottom="8dp"
                                 android:text="Clases de Guitarra Española"
                                 android:textColor="#000000"
                                 android:textSize="16sp"
@@ -102,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:marginBottom="12dp">
+                        android:layout_marginBottom="12dp">
 
                         <ImageView
                             android:layout_width="16dp"
@@ -117,7 +115,7 @@
                             android:text="2.5 km"
                             android:textSize="12sp"
                             android:textColor="#666666"
-                            android:marginStart="4dp" />
+                            android:layout_marginStart="4dp" />
 
                         <com.google.android.material.chip.Chip
                             android:layout_width="wrap_content"
@@ -142,9 +140,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Solicitada section -->
-
-
             <!-- Second Card - Busco Profesor de Programación Python -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -167,7 +162,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="#000000"
-                        android:marginBottom="8dp" />
+                        android:layout_marginBottom="8dp" />
 
                     <com.google.android.material.chip.Chip
                         android:layout_width="wrap_content"
@@ -183,7 +178,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:marginBottom="12dp">
+                        android:layout_marginBottom="12dp">
 
                         <ImageView
                             android:layout_width="40dp"
@@ -197,7 +192,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical"
-                            android:marginStart="12dp">
+                            android:layout_marginStart="12dp">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -224,7 +219,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:marginBottom="12dp">
+                        android:layout_marginBottom="12dp">
 
                         <ImageView
                             android:layout_width="16dp"
@@ -239,7 +234,7 @@
                             android:text="1.2 km"
                             android:textSize="12sp"
                             android:textColor="#666666"
-                            android:marginStart="4dp" />
+                            android:layout_marginStart="4dp" />
 
                         <com.google.android.material.chip.Chip
                             android:layout_width="wrap_content"
@@ -285,6 +280,5 @@
         android:background="#FFFFFF"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
-
 
 </LinearLayout>
