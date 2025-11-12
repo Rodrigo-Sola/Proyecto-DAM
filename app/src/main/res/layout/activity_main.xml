@@ -6,11 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F5F5F5">
+    android:background="@color/fondo_principal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/fondo_principal"
         android:padding="24dp">
 
         <!-- Logo -->
@@ -235,8 +236,9 @@
 
 
             <!-- Facebook Button -->
+
             <LinearLayout
-                android:id="@+id/llAppleLogin"
+                android:id="@+id/llGitHubLogin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -261,36 +263,6 @@
                     android:text="@string/github_text"
                     android:textColor="#616161"
                     android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llFacebookLogin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:contentDescription="@string/facebook_login_desc"
-                    android:src="@drawable/facebook_svgrepo_com"
-                    tools:ignore="ImageContrastCheck" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/facebook_text"
-                    android:textColor="#757575"
-                    android:textSize="12sp"
-                    tools:ignore="TextContrastCheck" />
 
             </LinearLayout>
 
