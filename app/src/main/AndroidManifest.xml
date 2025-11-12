@@ -8,9 +8,11 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoDAM">
+
+        <!-- SplashScreen como activity de inicio -->
         <activity
             android:name=".perfil"
             android:exported="false"
@@ -20,13 +22,21 @@
             android:exported="false" />
         <activity
             android:name=".OnboardingActivity"
+            android:name=".SplashScreen"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- OnboardingActivity -->
+        <activity
+            android:name=".OnboardingActivity"
+            android:exported="true"/>
+
+        <!-- MainActivity -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
@@ -36,6 +46,8 @@
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
+            android:exported="false"/>
+
     </application>
 
 </manifest>
