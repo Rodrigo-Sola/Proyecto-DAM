@@ -14,6 +14,17 @@
 
         <!-- SplashScreen como activity de inicio -->
         <activity
+            android:name=".perfil"
+            android:exported="false"
+            />
+        <activity
+            android:name=".Home2Activity"
+            android:exported="false" />
+        <activity
+            android:name=".principal"
+            android:exported="false" />
+        <activity
+            android:name=".OnboardingActivity"
             android:name=".SplashScreen"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
@@ -31,6 +42,13 @@
         <!-- MainActivity -->
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
             android:exported="false"/>
 
     </application>
