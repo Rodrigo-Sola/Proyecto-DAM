@@ -24,14 +24,13 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginEnd="20dp"
-                android:background="@color/terciario"
+                android:background="@drawable/circular_image"
                 android:clipToOutline="true"
                 android:contentDescription="@string/m"
                 android:elevation="6dp"
                 android:padding="4dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_profile_placeholder"
-                tools:targetApi="31" />
+                android:src="@drawable/ic_profile_placeholder" />
 
             <LinearLayout
                 android:layout_width="0dp"
