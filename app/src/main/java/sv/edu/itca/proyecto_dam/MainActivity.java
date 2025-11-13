@@ -1,39 +1,35 @@
 package sv.edu.itca.proyecto_dam;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.credentials.Credential;
-import androidx.credentials.CredentialManager;
-import androidx.credentials.GetCredentialRequest;
-import androidx.credentials.GetCredentialResponse;
 
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.OAuthProvider;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
- * Actividad principal que maneja el login de usuarios
- * Incluye autenticación con Firebase, Google y GitHub
+ * Actividad principal que maneja el login de usuarios usando API REST
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -43,13 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private TextInputEditText etEmail, etPassword;
     private MaterialButton btnLogin;
     private TextView tvForgotPassword, tvSignUpLink;
-    private LinearLayout llGoogleLogin, llGitHubLogin;
-
-    // Firebase Authentication
-    private FirebaseAuth firebaseAuth;
-
-    // Credential Manager para Google Sign-In
-    private CredentialManager credentialManager;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,19 +47,10 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        initializeFirebase();
         initializeViews();
         setupClickListeners();
         setupWindowInsets();
         checkIfUserLoggedIn();
-    }
-
-    /**
-     * Inicializa Firebase Authentication
-     */
-    private void initializeFirebase() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        credentialManager = CredentialManager.create(this);
     }
 
     /**
@@ -81,8 +62,13 @@ public class MainActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvSignUpLink = findViewById(R.id.tvSignUpLink);
-        llGoogleLogin = findViewById(R.id.llGoogleLogin);
-        llGitHubLogin = findViewById(R.id.llGitHubLogin);
+        progressBar = findViewById(R.id.progressBar);
+
+        // Ocultar botones de Google y GitHub si existen
+        LinearLayout llGoogleLogin = findViewById(R.id.llGoogleLogin);
+        LinearLayout llGitHubLogin = findViewById(R.id.llGitHubLogin);
+        if (llGoogleLogin != null) llGoogleLogin.setVisibility(View.GONE);
+        if (llGitHubLogin != null) llGitHubLogin.setVisibility(View.GONE);
     }
 
     /**
@@ -90,14 +76,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setupClickListeners() {
         btnLogin.setOnClickListener(v -> loginUser());
-        tvForgotPassword.setOnClickListener(v -> showForgotPasswordDialog());
+        tvForgotPassword.setOnClickListener(v -> showToast("Funcionalidad de recuperación de contraseña próximamente"));
         tvSignUpLink.setOnClickListener(v -> navigateToRegister());
-
-        // Autenticación con Google
-        llGoogleLogin.setOnClickListener(v -> signInWithGoogle());
-
-        // Autenticación con GitHub
-        llGitHubLogin.setOnClickListener(v -> signInWithGithub());
     }
 
     /**
@@ -118,15 +98,16 @@ public class MainActivity extends AppCompatActivity {
      * Verifica si hay un usuario ya logueado
      */
     private void checkIfUserLoggedIn() {
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser != null) {
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        int userId = prefs.getInt("userId", -1);
+        if (userId != -1) {
             // Usuario ya está logueado, navegar a la pantalla principal
             navigateToHome();
         }
     }
 
     /**
-     * Inicia sesión del usuario
+     * Inicia sesión del usuario usando la API
      */
     private void loginUser() {
         String email = getText(etEmail);
@@ -139,114 +120,104 @@ public class MainActivity extends AppCompatActivity {
 
         showLoading(true);
 
-        // Autenticar usuario con Firebase
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    showLoading(false);
+        // Autenticar usuario con la API
+        authenticateWithAPI(email, password);
+    }
 
-                    if (task.isSuccessful()) {
-                        // Login exitoso
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        if (user != null) {
-                            checkEmailVerification(user);
+    /**
+     * Autentica al usuario con la API REST
+     */
+    private void authenticateWithAPI(String email, String password) {
+        new Thread(() -> {
+            try {
+                OkHttpClient client = new OkHttpClient();
+                String url = "http://172.193.118.141:8080/api/usuarios/all";
+
+                Request request = new Request.Builder()
+                        .url(url)
+                        .get()
+                        .build();
+
+                Response response = client.newCall(request).execute();
+
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseData = response.body().string();
+                    Log.d(TAG, "Respuesta completa de la API: " + responseData);
+                    
+                    JSONArray jsonArray = new JSONArray(responseData);
+
+                    boolean loginSuccess = false;
+                    int userId = -1;
+                    String userName = "";
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject userObj = jsonArray.getJSONObject(i);
+
+                        // Log del objeto completo para debugging
+                        Log.d(TAG, "Usuario " + i + ": " + userObj.toString());
+
+                        String userEmail = userObj.optString("email", userObj.optString("correo", ""));
+                        String userPassword = userObj.optString("password", userObj.optString("contrasena", ""));
+
+                        if (userEmail.equalsIgnoreCase(email) && userPassword.equals(password)) {
+                            loginSuccess = true;
+
+                            // Intentar diferentes nombres de campo para el ID
+                            if (userObj.has("idUsuario")) {
+                                userId = userObj.getInt("idUsuario");
+                            } else if (userObj.has("id")) {
+                                userId = userObj.getInt("id");
+                            } else if (userObj.has("id_usuario")) {
+                                userId = userObj.getInt("id_usuario");
+                            }
+
+                            userName = userObj.optString("nombre", "");
+
+                            Log.d(TAG, "Usuario encontrado - ID: " + userId + ", Email: " + userEmail + ", Nombre: " + userName);
+                            break;
                         }
-                    } else {
-                        // Error en el login
-                        handleLoginError(task.getException());
                     }
-                });
-    }
 
-    /**
-     * Verifica si el correo del usuario ha sido verificado
-     */
-    private void checkEmailVerification(FirebaseUser user) {
-        if (user.isEmailVerified()) {
-            // Email verificado, proceder al home
-            showToast(getString(R.string.login_success));
-            navigateToHome();
-        } else {
-            // Email no verificado, mostrar diálogo de verificación
-            showEmailVerificationDialog(user);
-        }
-    }
+                    if (loginSuccess && userId != -1) {
+                        // Guardar datos en SharedPreferences
+                        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+                        prefs.edit()
+                            .putInt("userId", userId)
+                            .putString("userEmail", email)
+                            .putString("userName", userName)
+                            .apply();
 
-    /**
-     * Muestra un diálogo para manejar la verificación de correo
-     */
-    private void showEmailVerificationDialog(FirebaseUser user) {
-        new AlertDialog.Builder(this)
-                .setTitle("Verificación de Correo")
-                .setMessage(getString(R.string.email_not_verified))
-                .setPositiveButton(getString(R.string.resend_verification), (dialog, which) ->
-                    sendVerificationEmail(user))
-                .setNegativeButton("Más tarde", (dialog, which) -> navigateToHome())
-                .setNeutralButton("Cerrar Sesión", (dialog, which) -> firebaseAuth.signOut())
-                .show();
-    }
+                        Log.d(TAG, "Login exitoso. userId: " + userId);
 
-    /**
-     * Envía correo de verificación
-     */
-    private void sendVerificationEmail(FirebaseUser user) {
-        user.sendEmailVerification()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        showToast(getString(R.string.verification_email_sent));
+                        runOnUiThread(() -> {
+                            showLoading(false);
+                            showToast("Inicio de sesión exitoso");
+                            navigateToHome();
+                        });
                     } else {
-                        showToast("Error al enviar correo de verificación");
+                        runOnUiThread(() -> {
+                            showLoading(false);
+                            showToast("Email o contraseña incorrectos");
+                        });
                     }
+                } else {
+                    runOnUiThread(() -> {
+                        showLoading(false);
+                        showToast("Error al conectar con el servidor");
+                    });
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error en autenticación: " + e.getMessage());
+                runOnUiThread(() -> {
+                    showLoading(false);
+                    showToast("Error: " + e.getMessage());
                 });
+            }
+        }).start();
     }
 
     /**
-     * Muestra diálogo para recuperar contraseña
-     */
-    private void showForgotPasswordDialog() {
-        // Crear EditText para el email
-        TextInputEditText etResetEmail = new TextInputEditText(this);
-        etResetEmail.setHint(getString(R.string.hint_email));
-        etResetEmail.setText(getText(etEmail)); // Pre-llenar con el email actual si existe
-
-        new AlertDialog.Builder(this)
-                .setTitle("Recuperar Contraseña")
-                .setMessage("Ingresa tu correo electrónico para recibir un enlace de restablecimiento")
-                .setView(etResetEmail)
-                .setPositiveButton("Enviar", (dialog, which) -> {
-                    String email = etResetEmail.getText() != null ?
-                        etResetEmail.getText().toString().trim() : "";
-                    resetPassword(email);
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
-    }
-
-    /**
-     * Envía enlace de restablecimiento de contraseña
-     */
-    private void resetPassword(String email) {
-        if (TextUtils.isEmpty(email)) {
-            showToast(getString(R.string.error_email_required));
-            return;
-        }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            showToast(getString(R.string.error_invalid_email));
-            return;
-        }
-
-        firebaseAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        showToast(getString(R.string.reset_password_sent));
-                    } else {
-                        showToast(getString(R.string.reset_password_failed));
-                    }
-                });
-    }
-
-    /**
-     * Valida los datos de entrada del login
+     * Valida los datos de entrada del formulario de login
      */
     private boolean validateLoginInputs(String email, String password) {
         // Validar email
@@ -273,29 +244,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Maneja los errores de login
-     */
-    private void handleLoginError(Exception exception) {
-        if (exception != null) {
-            String errorMessage = exception.getMessage();
-            if (errorMessage != null) {
-                if (errorMessage.contains("user not found")) {
-                    showToast(getString(R.string.user_not_found));
-                } else if (errorMessage.contains("wrong password") ||
-                          errorMessage.contains("invalid credential")) {
-                    showToast(getString(R.string.invalid_credentials));
-                } else if (errorMessage.contains("network error")) {
-                    showToast(getString(R.string.network_error));
-                } else {
-                    showToast(getString(R.string.login_failed));
-                }
-            } else {
-                showToast(getString(R.string.login_failed));
-            }
-        }
-    }
-
-    /**
      * Navega a la actividad de registro
      */
     private void navigateToRegister() {
@@ -307,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
      * Navega a la pantalla principal
      */
     private void navigateToHome() {
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, Home2Activity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
@@ -317,8 +265,10 @@ public class MainActivity extends AppCompatActivity {
      * Muestra u oculta el indicador de carga
      */
     private void showLoading(boolean isLoading) {
+        if (progressBar != null) {
+            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        }
         btnLogin.setEnabled(!isLoading);
-        btnLogin.setText(isLoading ? "Iniciando sesión..." : getString(R.string.btn_login));
     }
 
     /**
@@ -334,126 +284,5 @@ public class MainActivity extends AppCompatActivity {
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
-    /**
-     * Inicia el flujo de autenticación con Google usando Credential Manager
-     */
-    private void signInWithGoogle() {
-        GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false)
-                .setServerClientId(getString(R.string.default_web_client_id))
-                .setAutoSelectEnabled(true)
-                .build();
-
-        GetCredentialRequest request = new GetCredentialRequest.Builder()
-                .addCredentialOption(googleIdOption)
-                .build();
-
-        credentialManager.getCredentialAsync(
-                this,
-                request,
-                null,
-                getMainExecutor(),
-                new androidx.credentials.CredentialManagerCallback<GetCredentialResponse, androidx.credentials.exceptions.GetCredentialException>() {
-                    @Override
-                    public void onResult(GetCredentialResponse result) {
-                        handleGoogleSignIn(result);
-                    }
-
-                    @Override
-                    public void onError(androidx.credentials.exceptions.GetCredentialException e) {
-                        Log.e(TAG, "Error getting credential", e);
-                        String errorMsg = "Error al iniciar sesión con Google";
-                        if (e.getMessage() != null && e.getMessage().contains("No credentials available")) {
-                            errorMsg = "No hay cuentas de Google disponibles. Por favor, añade una cuenta primero.";
-                        } else if (e.getMessage() != null) {
-                            errorMsg = "Error: " + e.getMessage();
-                        }
-                        showToast(errorMsg);
-                    }
-                }
-        );
-    }
-
-    /**
-     * Maneja el resultado de la autenticación con Google
-     */
-    private void handleGoogleSignIn(GetCredentialResponse result) {
-        Credential credential = result.getCredential();
-
-        Log.d(TAG, "Credential type: " + credential.getType());
-
-        // Verificar si es una credencial de Google ID Token
-        if (GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL.equals(credential.getType())) {
-            try {
-                GoogleIdTokenCredential googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.getData());
-                String idToken = googleIdTokenCredential.getIdToken();
-
-                Log.d(TAG, "Google ID Token obtenido correctamente");
-
-                // Autenticar con Firebase usando el token de Google
-                firebaseAuthWithGoogle(idToken);
-            } catch (Exception e) {
-                Log.e(TAG, "Error al crear GoogleIdTokenCredential", e);
-                showToast("Error al procesar las credenciales: " + e.getMessage());
-            }
-        } else if (credential instanceof GoogleIdTokenCredential) {
-            // Fallback para el método anterior
-            GoogleIdTokenCredential googleIdTokenCredential = (GoogleIdTokenCredential) credential;
-            String idToken = googleIdTokenCredential.getIdToken();
-
-            Log.d(TAG, "Google ID Token obtenido (método alternativo)");
-            firebaseAuthWithGoogle(idToken);
-        } else {
-            Log.e(TAG, "Tipo de credencial no soportado: " + credential.getType());
-            showToast("Tipo de credencial no compatible. Por favor, intenta nuevamente.");
-        }
-    }
-
-    /**
-     * Autentica con Firebase usando el token de Google
-     */
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithCredential:success");
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        if (user != null) {
-                            showToast("Bienvenido " + user.getDisplayName());
-                            navigateToHome();
-                        }
-                    } else {
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        showToast("Error en autenticación: " +
-                                (task.getException() != null ? task.getException().getMessage() : "Desconocido"));
-                    }
-                });
-    }
-
-    /**
-     * Inicia el flujo de autenticación con GitHub
-     */
-    private void signInWithGithub() {
-        OAuthProvider.Builder provider = OAuthProvider.newBuilder("github.com");
-
-        // Opcional: solicitar scopes adicionales
-        // provider.setScopes(Arrays.asList("user:email"));
-
-        firebaseAuth.startActivityForSignInWithProvider(this, provider.build())
-                .addOnSuccessListener(authResult -> {
-                    Log.d(TAG, "signInWithGitHub:success");
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user != null) {
-                        showToast("Bienvenido " + user.getDisplayName());
-                        navigateToHome();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.w(TAG, "signInWithGitHub:failure", e);
-                    showToast("Error al iniciar sesión con GitHub: " + e.getMessage());
-                });
-    }
 }
+

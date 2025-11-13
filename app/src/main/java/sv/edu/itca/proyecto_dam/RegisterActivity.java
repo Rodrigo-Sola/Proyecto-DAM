@@ -1,25 +1,40 @@
 package sv.edu.itca.proyecto_dam;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
- * Actividad de registro de usuario con verificación de correo electrónico
- * Implementa las mejores prácticas de Firebase Authentication
+ * Actividad de registro de usuario usando API REST
  */
 public class RegisterActivity extends AppCompatActivity {
 
@@ -28,26 +43,19 @@ public class RegisterActivity extends AppCompatActivity {
     private MaterialButton btnRegister;
     private TextView tvSignInLink;
     private ProgressBar progressBar;
+    private ImageView ivCameraIcon, ivProfilePhoto;
 
-    // Firebase Authentication
-    private FirebaseAuth firebaseAuth;
+    private Uri selectedImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        initializeFirebase();
         initializeViews();
         setupClickListeners();
     }
 
-    /**
-     * Inicializa Firebase Authentication
-     */
-    private void initializeFirebase() {
-        firebaseAuth = FirebaseAuth.getInstance();
-    }
 
     /**
      * Inicializa las vistas de la UI
@@ -60,6 +68,8 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         tvSignInLink = findViewById(R.id.tvSignInLink);
         progressBar = findViewById(R.id.progressBar);
+        ivCameraIcon = findViewById(R.id.ivCameraIcon);
+        ivProfilePhoto = findViewById(R.id.ivProfilePhoto);
     }
 
     /**
@@ -68,16 +78,20 @@ public class RegisterActivity extends AppCompatActivity {
     private void setupClickListeners() {
         btnRegister.setOnClickListener(v -> registerUser());
         tvSignInLink.setOnClickListener(v -> navigateToLogin());
+        ivCameraIcon.setOnClickListener(v -> openGallery());
     }
 
     /**
-     * Registra un nuevo usuario en Firebase
+     * Registra un nuevo usuario usando la API
      */
+    @SuppressLint("NewApi")
     private void registerUser() {
         String fullName = getText(etFullName);
+        String lastName = "Apellido"; // Aquí puedes obtener el apellido del usuario si se agrega un campo en la UI
         String email = getText(etEmail);
         String password = getText(etPassword);
         String confirmPassword = getText(etConfirmPassword);
+        String biography = "Esta es mi biografía"; // Aquí puedes obtener la biografía del usuario si se agrega un campo en la UI
 
         // Validar los datos de entrada
         if (!validateInputs(fullName, email, password, confirmPassword)) {
@@ -86,57 +100,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         showLoading(true);
 
-        // Crear usuario en Firebase
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // Registro exitoso
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        if (user != null) {
-                            updateUserProfile(user, fullName);
-                            sendEmailVerification(user);
-                        }
-                    } else {
-                        // Error en el registro
-                        showLoading(false);
-                        handleRegistrationError(task.getException());
-                    }
-                });
-    }
-
-    /**
-     * Actualiza el perfil del usuario con su nombre completo
-     */
-    private void updateUserProfile(FirebaseUser user, String fullName) {
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(fullName)
-                .build();
-
-        user.updateProfile(profileUpdates)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Perfil actualizado exitosamente
-                        showToast(getString(R.string.registration_success));
-                    }
-                });
-    }
-
-    /**
-     * Envía el correo de verificación al usuario
-     */
-    private void sendEmailVerification(FirebaseUser user) {
-        user.sendEmailVerification()
-                .addOnCompleteListener(task -> {
-                    showLoading(false);
-                    if (task.isSuccessful()) {
-                        showToast(getString(R.string.verification_email_sent));
-                        // Cerrar sesión para que el usuario verifique su correo
-                        firebaseAuth.signOut();
-                        navigateToLogin();
-                    } else {
-                        showToast(getString(R.string.registration_failed));
-                    }
-                });
+        // Enviar datos a la API
+        sendUserDataToApi(fullName, lastName, email, password, selectedImageUri, biography);
     }
 
     /**
@@ -243,5 +208,120 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Envía los datos del usuario a la API
+     */
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private void sendUserDataToApi(String fullName, String lastName, String email, String password, Uri profileImageUri, String biography) {
+        new Thread(() -> {
+            try {
+                OkHttpClient client = new OkHttpClient();
+
+                // Crear el cuerpo de la solicitud
+                MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+                builder.addFormDataPart("nombre", fullName);
+                builder.addFormDataPart("apellido", lastName);
+                builder.addFormDataPart("email", email);
+                builder.addFormDataPart("password", password);
+                builder.addFormDataPart("biografia", biography); // Agregar biografía
+
+                if (profileImageUri != null) {
+                    File file = new File(getCacheDir(), "profile_image.jpg");
+                    try (InputStream inputStream = getContentResolver().openInputStream(profileImageUri);
+                         OutputStream os = new FileOutputStream(file)) {
+                        if (inputStream != null) {
+                            inputStream.transferTo(os);
+                        }
+                    }
+                    builder.addFormDataPart("fotoPerfil", file.getName(), RequestBody.create(MediaType.parse("image/jpeg"), file));
+                }
+
+                RequestBody requestBody = builder.build();
+
+                // Crear la solicitud HTTP
+                Request request = new Request.Builder()
+                        .url("http://172.193.118.141:8080/api/usuarios/save")
+                        .post(requestBody)
+                        .build();
+
+                // Enviar la solicitud
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        // Obtener el ID del usuario recién creado
+                        String responseBody = response.body() != null ? response.body().string() : "";
+                        android.util.Log.d("RegisterActivity", "Usuario guardado exitosamente. Response: " + responseBody);
+
+                        // Intentar parsear el ID del usuario de la respuesta
+                        try {
+                            org.json.JSONObject jsonResponse = new org.json.JSONObject(responseBody);
+                            int userId = -1;
+
+                            // Intentar diferentes nombres de campo para el ID
+                            if (jsonResponse.has("idUsuario")) {
+                                userId = jsonResponse.getInt("idUsuario");
+                            } else if (jsonResponse.has("id")) {
+                                userId = jsonResponse.getInt("id");
+                            } else if (jsonResponse.has("id_usuario")) {
+                                userId = jsonResponse.getInt("id_usuario");
+                            }
+
+                            if (userId != -1) {
+                                // Guardar el ID en SharedPreferences
+                                android.content.SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+                                prefs.edit()
+                                    .putInt("userId", userId)
+                                    .putString("userEmail", email)
+                                    .putString("userName", fullName)
+                                    .apply();
+                                android.util.Log.d("RegisterActivity", "userId guardado en SharedPreferences: " + userId);
+                            } else {
+                                android.util.Log.w("RegisterActivity", "No se pudo obtener el ID del usuario de la respuesta");
+                            }
+                        } catch (Exception e) {
+                            android.util.Log.e("RegisterActivity", "Error parseando respuesta: " + e.getMessage());
+                        }
+
+                        runOnUiThread(() -> {
+                            showLoading(false);
+                            showToast("Registro exitoso. Por favor inicia sesión.");
+                            navigateToLogin();
+                        });
+                    } else {
+                        String errorBody = response.body() != null ? response.body().string() : "Sin respuesta";
+                        android.util.Log.e("RegisterActivity", "Error al guardar en API - Código: " + response.code() + ", Body: " + errorBody);
+                        runOnUiThread(() -> {
+                            showLoading(false);
+                            showToast("Error al guardar en la API: " + response.message());
+                        });
+                    }
+                }
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    showLoading(false);
+                    showToast("Error: " + e.getMessage());
+                });
+            }
+        }).start();
+    }
+
+    /**
+     * Abre la galería para seleccionar una imagen
+     */
+    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null && result.getData().getData() != null) {
+                    selectedImageUri = result.getData().getData();
+                    ivProfilePhoto.setImageURI(selectedImageUri);
+                }
+            }
+    );
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        galleryLauncher.launch(intent);
     }
 }
