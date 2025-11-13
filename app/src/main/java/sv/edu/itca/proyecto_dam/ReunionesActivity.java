@@ -36,18 +36,22 @@ public class ReunionesActivity extends AppCompatActivity {
 
                 if (id == R.id.nav_home) {
                     startActivity(new Intent(ReunionesActivity.this, Home2Activity.class));
+                    finish();
                     return true;
                 } else if (id == R.id.nav_search) {
                     startActivity(new Intent(ReunionesActivity.this, principal.class));
+                    finish();
 
                     return true;
                 }
                 else if (id == R.id.nav_noti) {
                     startActivity(new Intent(ReunionesActivity.this, ReunionesActivity.class));
+                    finish();
                     return true;
                 }
                 else if (id == R.id.nav_profile) {
                     startActivity(new Intent(ReunionesActivity.this, perfil.class));
+                    finish();
                     return true;
                 }
                 return false;
