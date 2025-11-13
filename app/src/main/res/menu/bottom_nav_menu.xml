@@ -2,21 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
-        android:icon="@android:drawable/ic_menu_view"
+        android:icon="@drawable/hogar"
         android:title="Home" />
 
     <item
         android:id="@+id/nav_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/busqueda"
         android:title="Search" />
 
     <item
         android:id="@+id/nav_skills"
-        android:icon="@android:drawable/ic_menu_gallery"
-        android:title="Skills" />
+        android:icon="@drawable/noti"
+        android:title="Notificaciones" />
 
     <item
         android:id="@+id/nav_profile"
-        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:icon="@drawable/usuario"
         android:title="Profile" />
 </menu>

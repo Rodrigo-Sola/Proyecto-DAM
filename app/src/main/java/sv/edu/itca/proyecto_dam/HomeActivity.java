@@ -44,6 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         // Actualizar información del usuario cuando la actividad regresa al foco
         refreshUserInfo();
+
     }
 
     /**
@@ -72,8 +73,14 @@ public class HomeActivity extends AppCompatActivity {
      */
     private void setupClickListeners() {
         btnResendVerification.setOnClickListener(v -> resendVerificationEmail());
-        btnRefreshUser.setOnClickListener(v -> refreshUserInfo());
+        btnRefreshUser.setOnClickListener(v -> openFormActivity());
         btnLogout.setOnClickListener(v -> logout());
+    }
+
+    private void openFormActivity() {
+        Intent intent = new Intent(this, form.class);
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -81,6 +88,7 @@ public class HomeActivity extends AppCompatActivity {
      */
     private void loadUserInformation() {
         if (currentUser != null) {
+
             updateUserUI();
         } else {
             // Si no hay usuario logueado, redirigir al login
