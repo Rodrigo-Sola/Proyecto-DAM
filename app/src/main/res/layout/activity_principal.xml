@@ -5,8 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/fondo_principal"
+    android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".principal">
 
     <ScrollView
@@ -26,9 +27,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -49,23 +50,22 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:layout_marginBottom="12dp"
-                        >
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:scaleType="centerCrop"
                             android:background="@drawable/profile_photo_background"
-                            android:contentDescription="@string/profile_pic" />
+                            android:contentDescription="@string/profile_pic"
+                            android:scaleType="centerCrop" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_marginStart="12dp">
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -80,18 +80,18 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Carlos Mendoza"
+                                android:textColor="#000000"
                                 android:textSize="14sp"
-                                android:textStyle="bold"
-                                android:textColor="#000000" />
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Enseño guitarra española clásica y flamenca. Más de 10 años de expe..."
-                                android:textSize="12sp"
-                                android:textColor="#666666"
+                                android:ellipsize="end"
                                 android:maxLines="2"
-                                android:ellipsize="end" />
+                                android:text="Enseño guitarra española clásica y flamenca. Más de 10 años de expe..."
+                                android:textColor="#666666"
+                                android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -99,24 +99,24 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@android:drawable/ic_dialog_map"
                             android:contentDescription="@string/distance"
+                            android:src="@android:drawable/ic_dialog_map"
                             app:tint="#999999" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
                             android:text="2.5 km"
-                            android:textSize="12sp"
                             android:textColor="#666666"
-                            android:layout_marginStart="4dp" />
+                            android:textSize="12sp" />
 
                         <com.google.android.material.chip.Chip
                             android:layout_width="wrap_content"
@@ -146,9 +146,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="#FFFFFF">
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -159,11 +159,11 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
                         android:text="Busco Profesor de Programación Python"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
                         android:textColor="#000000"
-                        android:layout_marginBottom="8dp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <com.google.android.material.chip.Chip
                         android:layout_width="wrap_content"
@@ -178,39 +178,39 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="12dp">
+                        android:layout_marginBottom="12dp"
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:scaleType="centerCrop"
                             android:background="@drawable/profile_photo_background"
-                            android:contentDescription="@string/profile_pic" />
+                            android:contentDescription="@string/profile_pic"
+                            android:scaleType="centerCrop" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_marginStart="12dp">
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="María González"
+                                android:textColor="#000000"
                                 android:textSize="14sp"
-                                android:textStyle="bold"
-                                android:textColor="#000000" />
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Necesito ayuda para aprender Python desde cero. Especialmen..."
-                                android:textSize="12sp"
-                                android:textColor="#666666"
+                                android:ellipsize="end"
                                 android:maxLines="2"
-                                android:ellipsize="end" />
+                                android:text="Necesito ayuda para aprender Python desde cero. Especialmen..."
+                                android:textColor="#666666"
+                                android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -218,24 +218,24 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@android:drawable/ic_dialog_map"
                             android:contentDescription="@string/distance"
+                            android:src="@android:drawable/ic_dialog_map"
                             app:tint="#999999" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
                             android:text="1.2 km"
-                            android:textSize="12sp"
                             android:textColor="#666666"
-                            android:layout_marginStart="4dp" />
+                            android:textSize="12sp" />
 
                         <com.google.android.material.chip.Chip
                             android:layout_width="wrap_content"
@@ -267,6 +267,7 @@
                 android:layout_height="56dp"
                 android:layout_gravity="end|bottom"
                 android:layout_margin="16dp"
+                android:padding="20dp"
                 android:src="@android:drawable/ic_input_add"
                 app:backgroundTint="#C08968"
                 tools:ignore="SpeakableTextPresentCheck" />

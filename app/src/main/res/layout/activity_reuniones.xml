@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".ReunionesActivity">
 
 
@@ -18,18 +19,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:padding="8dp">
+            android:padding="8dp"
+            android:paddingHorizontal="16dp">
 
             <!-- Primera sesión -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/terciario"
-                android:padding="16dp"
                 android:layout_marginBottom="12dp"
-                android:elevation="4dp">
+                android:background="@color/terciario"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -69,11 +70,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/terciario"
-                android:padding="16dp"
                 android:layout_marginBottom="24dp"
-                android:elevation="4dp">
+                android:background="@color/terciario"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -86,27 +87,27 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:text="con Ana Martínez"
                     android:textColor="@color/texto_oscuro"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:text="00:22 - 14/11/2025"
                     android:textColor="@color/texto_oscuro"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="Pendiente"
                     android:textColor="@color/secundario"
                     android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp" />
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Puedes agregar más sesiones aquí si necesitas -->
@@ -121,7 +122,6 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
         </LinearLayout>
-
 
 
     </ScrollView>

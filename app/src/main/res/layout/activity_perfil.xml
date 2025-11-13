@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fondo_principal"
-    android:padding="16dp">
+    android:padding="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,14 +24,14 @@
                 android:id="@+id/imgPerfil"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_profile_placeholder"
-                android:background="@color/terciario"
-                android:padding="4dp"
                 android:layout_marginEnd="20dp"
-                android:scaleType="centerCrop"
+                android:background="@color/terciario"
+                android:clipToOutline="true"
                 android:contentDescription="@string/m"
                 android:elevation="6dp"
-                android:clipToOutline="true"
+                android:padding="4dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile_placeholder"
                 tools:targetApi="31" />
 
             <!-- Información de Usuario -->
@@ -39,8 +39,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvNombre"
@@ -55,21 +55,59 @@
                     android:id="@+id/tvUbicacion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
                     android:text="@string/noso"
                     android:textColor="@color/texto_oscuro"
-                    android:textSize="18sp"
-                    android:layout_marginTop="6dp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
+        </LinearLayout>
+
+        <!-- Verifications Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/terciario"
+            android:elevation="2dp"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Verificaciones"
+                android:textColor="@color/texto_oscuro"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email_verificado1"
+                android:textColor="@color/texto_oscuro" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="• Teléfono verificado"
+                android:textColor="@color/texto_oscuro" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="• Identidad verificada"
+                android:textColor="@color/texto_oscuro" />
         </LinearLayout>
 
         <!-- Divider -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/primario"
-            android:layout_marginVertical="16dp" />
+            android:layout_marginVertical="16dp"
+            android:background="@color/primario" />
 
         <!-- Tab Menu -->
         <com.google.android.material.tabs.TabLayout
@@ -107,11 +145,11 @@
                 android:id="@+id/habilidadesContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:background="@color/white"
+                android:elevation="2dp"
+                android:orientation="vertical"
                 android:padding="16dp"
-                android:visibility="visible"
-                android:elevation="2dp">
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -126,6 +164,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="• Marketing Digital"
+                    android:textColor="@color/texto_oscuro" />
                     android:orientation="horizontal"
                     android:layout_marginBottom="8dp">
 
@@ -273,11 +314,11 @@
                 android:id="@+id/resenasContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:background="@color/white"
+                android:elevation="2dp"
+                android:orientation="vertical"
                 android:padding="16dp"
-                android:visibility="gone"
-                android:elevation="2dp">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -291,10 +332,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_marginTop="12dp"
                     android:background="@color/terciario"
-                    android:padding="12dp"
-                    android:layout_marginTop="12dp">
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -321,18 +362,18 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
                         android:text="★★★★★"
                         android:textColor="@color/secundario"
-                        android:textSize="14sp"
-                        android:layout_marginTop="4dp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Excelente experiencia intercambiando conocimientos de marketing digital por programación. María es muy paciente y explica muy bien los conceptos."
                         android:textColor="@color/texto_oscuro"
-                        android:textSize="14sp"
-                        android:layout_marginTop="8dp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -343,11 +384,11 @@
                 android:id="@+id/sobreMiContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:background="@color/white"
+                android:elevation="2dp"
+                android:orientation="vertical"
                 android:padding="16dp"
-                android:visibility="gone"
-                android:elevation="2dp">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -360,27 +401,27 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:lineSpacingExtra="4dp"
                     android:text="Soy María, especialista en marketing digital con más de 5 años de experiencia en el sector. Me apasiona compartir conocimientos y aprender de los demás a través del intercambio de habilidades."
                     android:textColor="@color/texto_oscuro"
-                    android:textSize="14sp"
-                    android:lineSpacingExtra="4dp"
-                    android:layout_marginTop="12dp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:text="Intereses:"
                     android:textColor="@color/texto_oscuro"
-                    android:textStyle="bold"
-                    android:layout_marginTop="16dp" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:text="• Tecnología\n• Marketing Digital\n• Programación\n• Diseño\n• Emprendimiento"
                     android:textColor="@color/texto_oscuro"
-                    android:textSize="14sp"
-                    android:layout_marginTop="8dp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -390,6 +431,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
             android:orientation="horizontal"
             android:layout_marginTop="24dp">
 
@@ -397,11 +441,11 @@
                 android:id="@+id/btnSolicitarIntercambio"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="@string/solicitar_intercambioH"
                 android:backgroundTint="@color/secundario"
-                android:textColor="@color/texto_oscuro"
-                android:layout_marginStart="8dp" />
+                android:text="@string/solicitar_intercambioH"
+                android:textColor="@color/texto_oscuro" />
 
         </LinearLayout>
 

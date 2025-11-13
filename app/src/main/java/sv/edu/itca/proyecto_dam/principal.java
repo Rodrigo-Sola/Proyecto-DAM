@@ -16,6 +16,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class principal extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +28,11 @@ public class principal extends AppCompatActivity {
             return insets;
 
 
+
+
         });
+        setupClickListeners();
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
@@ -39,8 +44,14 @@ public class principal extends AppCompatActivity {
                     return true;
                 } else if (id == R.id.nav_search) {
                     startActivity(new Intent(principal.this, principal.class));
+
                     return true;
-                } else if (id == R.id.nav_profile) {
+                }
+                else if (id == R.id.nav_noti) {
+                    startActivity(new Intent(principal.this, ReunionesActivity.class));
+                    return true;
+                }
+                else if (id == R.id.nav_profile) {
                     startActivity(new Intent(principal.this, perfil.class));
                     return true;
                 }
@@ -51,4 +62,22 @@ public class principal extends AppCompatActivity {
 
 
     }
+
+    private void setupClickListeners()
+    {
+        {
+            findViewById(R.id.aggHabilidad).setOnClickListener(v -> agregarHabilidades());
+
+
+        }
+    }
+
+    private void agregarHabilidades()
+    {
+        Intent intent = new Intent(this, form.class);
+        startActivity(intent);
+        finish();
+    }
+
+
 }
