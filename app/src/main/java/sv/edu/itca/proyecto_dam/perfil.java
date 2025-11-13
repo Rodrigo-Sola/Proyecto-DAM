@@ -1,8 +1,12 @@
 package sv.edu.itca.proyecto_dam;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -16,6 +20,29 @@ public class perfil extends AppCompatActivity {
         setContentView(R.layout.activity_perfil);
 
         setupTabLayout();
+        setupLogoutButton();
+    }
+
+    private void setupLogoutButton() {
+        // Buscar botón de logout si existe en el layout
+        Button btnLogout = findViewById(R.id.btnLogout);
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> logout());
+        }
+    }
+
+    private void logout() {
+        // Limpiar SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        prefs.edit().clear().apply();
+
+        Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+
+        // Navegar al login
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void setupTabLayout() {

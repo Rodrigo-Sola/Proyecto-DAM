@@ -1,6 +1,7 @@
 package sv.edu.itca.proyecto_dam;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -12,16 +13,12 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import androidx.annotation.NonNull;
 
 public class Home2Activity extends AppCompatActivity {
 
     private TextView nomUser;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +29,11 @@ public class Home2Activity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-
-
-
-
-
         });
+
         inicialzarView();
-        initializeFirebase();
         updateUserUI();
         setupClickListeners();
-
-
-
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
@@ -58,48 +47,34 @@ public class Home2Activity extends AppCompatActivity {
                 } else if (id == R.id.nav_search) {
                     startActivity(new Intent(Home2Activity.this, principal.class));
                     return true;
-                }
-                else if (id == R.id.nav_noti) {
+                } else if (id == R.id.nav_noti) {
                     startActivity(new Intent(Home2Activity.this, ReunionesActivity.class));
                     return true;
-                }
-                else if (id == R.id.nav_profile) {
+                } else if (id == R.id.nav_profile) {
                     startActivity(new Intent(Home2Activity.this, perfil.class));
                     return true;
                 }
                 return false;
             }
         });
-
-
-    }
-    private void initializeFirebase() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        currentUser = firebaseAuth.getCurrentUser();
     }
 
-    private void updateUserUI()
-    {
-        String displayName = currentUser.getDisplayName();
-        nomUser.setText("Bienvenido " + (displayName != null ? displayName : "No especificado"));
+    private void updateUserUI() {
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String displayName = prefs.getString("userName", "Usuario");
+        nomUser.setText("Bienvenido " + displayName);
     }
 
-    private void inicialzarView()
-    {
+    private void inicialzarView() {
         nomUser = findViewById(R.id.Userinfo);
     }
 
     private void setupClickListeners() {
-        {
-            findViewById(R.id.aggHabilidad).setOnClickListener(v -> agregarHabilidades());
-
-
-        }
+        findViewById(R.id.aggHabilidad).setOnClickListener(v -> agregarHabilidades());
     }
-    private void agregarHabilidades()
-    {
+
+    private void agregarHabilidades() {
         Intent intent = new Intent(this, form.class);
         startActivity(intent);
-        finish();
     }
 }
