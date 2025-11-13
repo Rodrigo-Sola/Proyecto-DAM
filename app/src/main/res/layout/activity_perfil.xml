@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -139,7 +140,7 @@
             android:layout_height="300dp"
             android:layout_marginTop="16dp">
 
-            <!-- Habilidades Content (Default) -->
+            <!-- Habilidades Content (Default) - MODIFICADO -->
             <LinearLayout
                 android:id="@+id/habilidadesContent"
                 android:layout_width="match_parent"
@@ -153,35 +154,158 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Contenido de Habilidades"
+                    android:text="Habilidades que ofrezco"
                     android:textColor="@color/texto_oscuro"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- Fila 1 de habilidades -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="• Marketing Digital"
                     android:textColor="@color/texto_oscuro" />
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="• Programación"
-                    android:textColor="@color/texto_oscuro" />
+                    <!-- Chip Diseño UI/UX -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@color/terciario"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="• Diseño Gráfico"
-                    android:textColor="@color/texto_oscuro" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Diseño UI/UX"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" ×"
+                            android:textColor="@color/primario"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="4dp" />
+
+                    </LinearLayout>
+
+                    <!-- Chip Marketing Digital -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@color/terciario"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Marketing Digital"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" ×"
+                            android:textColor="@color/primario"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="4dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Fila 2 de habilidades -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="• Gestión de Proyectos"
-                    android:textColor="@color/texto_oscuro" />
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="16px">
+
+                    <!-- Chip Cocina Italiana -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@color/terciario"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cocina Italiana"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" ×"
+                            android:textColor="@color/primario"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="4dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Campo para agregar nueva habilidad CON BOTÓN + -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        app:boxBackgroundColor="@color/terciario"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etNuevaHabilidad"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Ej: Programación en Python..."
+                            android:textColor="@color/texto_oscuro"
+                            android:textColorHint="@color/texto_oscuro" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Botón + para agregar -->
+                    <Button
+                        android:id="@+id/btnAgregarHabilidad"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:text="+"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="@color/primario"
+                        android:textColor="@color/white"
+                        android:elevation="4dp" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -310,6 +434,8 @@
             android:layout_marginTop="24dp"
             android:orientation="horizontal">
 
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp">
 
             <Button
                 android:id="@+id/btnSolicitarIntercambio"
