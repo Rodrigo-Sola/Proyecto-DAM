@@ -41,6 +41,8 @@ public class Home2Activity extends AppCompatActivity {
         inicialzarView();
         initializeFirebase();
         updateUserUI();
+        setupClickListeners();
+
 
 
 
@@ -56,7 +58,12 @@ public class Home2Activity extends AppCompatActivity {
                 } else if (id == R.id.nav_search) {
                     startActivity(new Intent(Home2Activity.this, principal.class));
                     return true;
-                } else if (id == R.id.nav_profile) {
+                }
+                else if (id == R.id.nav_noti) {
+                    startActivity(new Intent(Home2Activity.this, ReunionesActivity.class));
+                    return true;
+                }
+                else if (id == R.id.nav_profile) {
                     startActivity(new Intent(Home2Activity.this, perfil.class));
                     return true;
                 }
@@ -80,5 +87,19 @@ public class Home2Activity extends AppCompatActivity {
     private void inicialzarView()
     {
         nomUser = findViewById(R.id.Userinfo);
+    }
+
+    private void setupClickListeners() {
+        {
+            findViewById(R.id.aggHabilidad).setOnClickListener(v -> agregarHabilidades());
+
+
+        }
+    }
+    private void agregarHabilidades()
+    {
+        Intent intent = new Intent(this, form.class);
+        startActivity(intent);
+        finish();
     }
 }
