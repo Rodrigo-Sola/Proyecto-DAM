@@ -24,6 +24,9 @@
             android:name=".perfil"
             android:exported="false" />
         <activity
+            android:name=".PerfilUsuarioActivity"
+            android:exported="false" />
+        <activity
             android:name=".Home2Activity"
             android:exported="false" />
         <activity
