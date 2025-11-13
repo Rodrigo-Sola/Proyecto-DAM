@@ -88,6 +88,10 @@ public class HomeActivity extends AppCompatActivity {
      */
     private void loadUserInformation() {
         if (currentUser != null) {
+            Intent intent = new Intent(this, Home2Activity.class);
+            startActivity(intent);
+            finish();
+            // Usuario Logueado
 
             updateUserUI();
         } else {

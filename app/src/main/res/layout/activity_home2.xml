@@ -10,6 +10,18 @@
     android:padding="16dp"
     tools:context=".Home2Activity">
 
+    <TextView
+        android:id="@+id/Userinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/texto_oscuro"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+
+
     <!-- Título Nuevas Coincidencias -->
     <TextView
         android:layout_width="match_parent"
