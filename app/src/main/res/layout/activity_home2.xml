@@ -438,8 +438,20 @@
             </LinearLayout>
 
             <!-- Puedes agregar más sesiones aquí si necesitas -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/aggHabilidad"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="16dp"
+                android:src="@android:drawable/ic_input_add"
+                app:backgroundTint="#C08968"
+                tools:ignore="SpeakableTextPresentCheck" />
 
         </LinearLayout>
+
+
+
     </ScrollView>
 
 
