@@ -1,12 +1,18 @@
 package sv.edu.itca.proyecto_dam;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class Home2Activity extends AppCompatActivity {
 
@@ -19,6 +25,27 @@ public class Home2Activity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+
+        });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
+        bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.nav_home) {
+                    startActivity(new Intent(Home2Activity.this, Home2Activity.class));
+                    return true;
+                } else if (id == R.id.nav_search) {
+                    startActivity(new Intent(Home2Activity.this, principal.class));
+                    return true;
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(Home2Activity.this, perfil.class));
+                    return true;
+                }
+                return false;
+            }
         });
     }
 }
