@@ -10,6 +10,17 @@
     android:padding="20dp"
     tools:context=".principal">
 
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Buscar..."
+        android:iconifiedByDefault="false"
+        android:padding="8dp"/>
+
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
