@@ -3,25 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/nav_home"
-        android:icon="@drawable/hogar"
+        android:icon="@drawable/home"
         android:title="Home"
         app:itemIconSize="28dp" />
 
     <item
         android:id="@+id/nav_search"
-        android:icon="@drawable/busqueda"
+        android:icon="@drawable/search"
         android:title="Search"
         app:itemIconSize="28dp" />
 
     <item
         android:id="@+id/nav_noti"
-        android:icon="@drawable/noti"
+        android:icon="@drawable/mail"
         android:title="Notificaciones"
         app:itemIconSize="28dp" />
 
     <item
         android:id="@+id/nav_profile"
-        android:icon="@drawable/usuario"
+        android:icon="@drawable/user"
         android:title="Profile"
         app:itemIconSize="28dp" />
 </menu>
