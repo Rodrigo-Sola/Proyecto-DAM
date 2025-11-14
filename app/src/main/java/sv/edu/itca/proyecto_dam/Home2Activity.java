@@ -36,6 +36,7 @@ public class Home2Activity extends AppCompatActivity {
 
     private TextView nomUser;
     private LinearLayout usuariosContainer;
+    private ImageView imgPerfilHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +80,42 @@ public class Home2Activity extends AppCompatActivity {
     private void updateUserUI() {
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         String displayName = prefs.getString("userName", "Usuario");
-        nomUser.setText("Bienvenido " + displayName);
+        String userPhoto = prefs.getString("userPhoto", "");
+
+        nomUser.setText(displayName);
+
+        // Cargar imagen de perfil del usuario actual
+        loadCurrentUserProfileImage(userPhoto);
+
+        // Configurar clic en el icono de perfil para redirigir a perfil
+        imgPerfilHeader.setOnClickListener(v -> {
+            Intent intent = new Intent(Home2Activity.this, perfil.class);
+            startActivity(intent);
+        });
+    }
+
+    private void loadCurrentUserProfileImage(String fotoPerfil) {
+        if (!fotoPerfil.isEmpty()) {
+            String filename = fotoPerfil.contains("/")
+                    ? fotoPerfil.substring(fotoPerfil.lastIndexOf("/") + 1)
+                    : fotoPerfil;
+            String imageUrl = "http://172.193.118.141:8080/images/" + filename;
+
+            Picasso.get()
+                    .load(imageUrl)
+                    .transform(new CircularTransformation())
+                    .placeholder(R.drawable.ic_profile_placeholder)
+                    .error(R.drawable.ic_profile_placeholder)
+                    .into(imgPerfilHeader);
+        } else {
+            imgPerfilHeader.setImageResource(R.drawable.ic_profile_placeholder);
+        }
     }
 
     private void inicialzarView() {
         nomUser = findViewById(R.id.Userinfo);
         usuariosContainer = findViewById(R.id.usuariosContainer);
+        imgPerfilHeader = findViewById(R.id.imgPerfilHeader);
     }
 
 
@@ -159,41 +190,43 @@ public class Home2Activity extends AppCompatActivity {
     }
 
     private LinearLayout createUserCard(JSONObject usuario) throws Exception {
-        // Card container
+        // Card container con bordes redondeados
         LinearLayout cardLayout = new LinearLayout(this);
         cardLayout.setOrientation(LinearLayout.VERTICAL);
-        cardLayout.setBackgroundResource(R.color.terciario);
+        cardLayout.setBackgroundResource(R.drawable.card_rounded_background);
 
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
-                (int) (280 * getResources().getDisplayMetrics().density),
+                (int) (320 * getResources().getDisplayMetrics().density),
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        cardParams.setMarginEnd((int) (12 * getResources().getDisplayMetrics().density));
+        cardParams.setMarginEnd((int) (16 * getResources().getDisplayMetrics().density));
+        cardParams.bottomMargin = (int) (12 * getResources().getDisplayMetrics().density);
         cardLayout.setLayoutParams(cardParams);
         cardLayout.setPadding(
-                (int) (16 * getResources().getDisplayMetrics().density),
-                (int) (16 * getResources().getDisplayMetrics().density),
-                (int) (16 * getResources().getDisplayMetrics().density),
-                (int) (16 * getResources().getDisplayMetrics().density)
+                (int) (20 * getResources().getDisplayMetrics().density),
+                (int) (20 * getResources().getDisplayMetrics().density),
+                (int) (20 * getResources().getDisplayMetrics().density),
+                (int) (20 * getResources().getDisplayMetrics().density)
         );
-        cardLayout.setElevation(4 * getResources().getDisplayMetrics().density);
+        cardLayout.setElevation(8 * getResources().getDisplayMetrics().density);
 
-        // Header layout (imagen + info)
+        // Header layout (imagen + info básica)
         LinearLayout headerLayout = new LinearLayout(this);
         headerLayout.setOrientation(LinearLayout.HORIZONTAL);
+        headerLayout.setGravity(android.view.Gravity.CENTER_VERTICAL);
         LinearLayout.LayoutParams headerParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         headerLayout.setLayoutParams(headerParams);
 
-        // Imagen de perfil circular
+        // Imagen de perfil circular más grande y prominente
         ImageView imgPerfil = new ImageView(this);
         LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
-                (int) (60 * getResources().getDisplayMetrics().density),
-                (int) (60 * getResources().getDisplayMetrics().density)
+                (int) (70 * getResources().getDisplayMetrics().density),
+                (int) (70 * getResources().getDisplayMetrics().density)
         );
-        imgParams.setMarginEnd((int) (12 * getResources().getDisplayMetrics().density));
+        imgParams.setMarginEnd((int) (16 * getResources().getDisplayMetrics().density));
         imgPerfil.setLayoutParams(imgParams);
         imgPerfil.setBackgroundResource(R.drawable.circular_image);
         imgPerfil.setClipToOutline(true);
@@ -217,9 +250,10 @@ public class Home2Activity extends AppCompatActivity {
             imgPerfil.setImageResource(R.drawable.ic_profile_placeholder);
         }
 
-        // Info layout
+        // Info layout con mejor jerarquía visual
         LinearLayout infoLayout = new LinearLayout(this);
         infoLayout.setOrientation(LinearLayout.VERTICAL);
+        infoLayout.setGravity(android.view.Gravity.CENTER_VERTICAL);
         LinearLayout.LayoutParams infoParams = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -227,31 +261,73 @@ public class Home2Activity extends AppCompatActivity {
         );
         infoLayout.setLayoutParams(infoParams);
 
-        // Nombre del usuario
+        // Nombre del usuario con tipografía destacada
         TextView nombreTextView = new TextView(this);
         String nombre = usuario.optString("nombre", "") + " " + usuario.optString("apellido", "");
         nombreTextView.setText(nombre);
         nombreTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
-        nombreTextView.setTextSize(16);
+        nombreTextView.setTextSize(18);
         nombreTextView.setTypeface(null, android.graphics.Typeface.BOLD);
+        nombreTextView.setMaxLines(1);
+        nombreTextView.setEllipsize(android.text.TextUtils.TruncateAt.END);
 
-        // Label "Enseña:"
+        // Subtítulo profesional
+        TextView profesionTextView = new TextView(this);
+        profesionTextView.setText("Desarrollador & Mentor");
+        profesionTextView.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+        profesionTextView.setTextSize(14);
+        LinearLayout.LayoutParams profesionParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        profesionParams.topMargin = (int) (2 * getResources().getDisplayMetrics().density);
+        profesionTextView.setLayoutParams(profesionParams);
+
+        // Agregar nombre y profesión al info layout
+        infoLayout.addView(nombreTextView);
+        infoLayout.addView(profesionTextView);
+
+        // Agregar imagen e info al header
+        headerLayout.addView(imgPerfil);
+        headerLayout.addView(infoLayout);
+
+        // Sección "ENSEÑA" con mejor espaciado
         TextView ensenaLabel = new TextView(this);
-        ensenaLabel.setText("Enseña:");
-        ensenaLabel.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
+        ensenaLabel.setText("ENSEÑA");
+        ensenaLabel.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
         ensenaLabel.setTextSize(12);
+        ensenaLabel.setTypeface(null, android.graphics.Typeface.BOLD);
+        ensenaLabel.setAllCaps(true);
         LinearLayout.LayoutParams ensenaParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        ensenaParams.topMargin = (int) (6 * getResources().getDisplayMetrics().density);
+        ensenaParams.topMargin = (int) (20 * getResources().getDisplayMetrics().density);
+        ensenaParams.bottomMargin = (int) (8 * getResources().getDisplayMetrics().density);
         ensenaLabel.setLayoutParams(ensenaParams);
 
-        // Habilidades (se cargarán después)
+        // Container para habilidades con presentación horizontal para chips
+        LinearLayout habilidadesContainer = new LinearLayout(this);
+        habilidadesContainer.setOrientation(LinearLayout.HORIZONTAL);
+        habilidadesContainer.setGravity(android.view.Gravity.START);
+        LinearLayout.LayoutParams habilidadesContainerParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        habilidadesContainer.setLayoutParams(habilidadesContainerParams);
+
+        // TextView temporal para mostrar "Cargando..." (será reemplazado por chips)
         TextView habilidadesTextView = new TextView(this);
         habilidadesTextView.setText("Cargando...");
-        habilidadesTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
-        habilidadesTextView.setTextSize(10);
+        habilidadesTextView.setTextColor(getResources().getColor(R.color.primario, null));
+        habilidadesTextView.setTextSize(12);
+        habilidadesTextView.setTypeface(null, android.graphics.Typeface.ITALIC);
+        LinearLayout.LayoutParams habilidadesParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        habilidadesParams.bottomMargin = (int) (16 * getResources().getDisplayMetrics().density);
+        habilidadesTextView.setLayoutParams(habilidadesParams);
 
         // Cargar habilidades del usuario
         int userId = usuario.optInt("id", -1);
@@ -259,40 +335,51 @@ public class Home2Activity extends AppCompatActivity {
             loadUserHabilidades(userId, habilidadesTextView);
         }
 
-        // Agregar vistas al info layout
-        infoLayout.addView(nombreTextView);
-        infoLayout.addView(ensenaLabel);
-        infoLayout.addView(habilidadesTextView);
+        habilidadesContainer.addView(habilidadesTextView);
 
-        // Agregar imagen e info al header
-        headerLayout.addView(imgPerfil);
-        headerLayout.addView(infoLayout);
-
-        // Botones layout
+        // Botones layout con distribución mejorada
         LinearLayout botonesLayout = new LinearLayout(this);
-        botonesLayout.setOrientation(LinearLayout.HORIZONTAL);
+        botonesLayout.setOrientation(LinearLayout.VERTICAL);
+        botonesLayout.setGravity(android.view.Gravity.CENTER);
         LinearLayout.LayoutParams botonesParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        botonesParams.topMargin = (int) (12 * getResources().getDisplayMetrics().density);
+        botonesParams.topMargin = (int) (8 * getResources().getDisplayMetrics().density);
         botonesLayout.setLayoutParams(botonesParams);
 
-        // Botón Ver Perfil
+        // Botón principal "Conectar" con bordes redondeados
+        Button btnConectar = new Button(this);
+        LinearLayout.LayoutParams btnConectarParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (int) (48 * getResources().getDisplayMetrics().density)
+        );
+        btnConectarParams.bottomMargin = (int) (8 * getResources().getDisplayMetrics().density);
+        btnConectar.setLayoutParams(btnConectarParams);
+        btnConectar.setText("Conectar");
+        btnConectar.setTextSize(14);
+        btnConectar.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
+        btnConectar.setBackgroundResource(R.drawable.button_primary_rounded);
+        btnConectar.setTypeface(null, android.graphics.Typeface.BOLD);
+        btnConectar.setAllCaps(false);
+        btnConectar.setOnClickListener(v -> {
+            // TODO: Iniciar proceso de conexión
+            Log.d(TAG, "Conectar con usuario ID: " + usuario.optInt("id", -1));
+        });
+
+        // Botón secundario "Ver Perfil" con bordes redondeados
         Button btnVerPerfil = new Button(this);
         LinearLayout.LayoutParams btnPerfilParams = new LinearLayout.LayoutParams(
-                0,
-                (int) (32 * getResources().getDisplayMetrics().density),
-                1f
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (int) (40 * getResources().getDisplayMetrics().density)
         );
-        btnPerfilParams.setMarginEnd((int) (6 * getResources().getDisplayMetrics().density));
         btnVerPerfil.setLayoutParams(btnPerfilParams);
         btnVerPerfil.setText("Ver Perfil");
-        btnVerPerfil.setTextSize(12);
+        btnVerPerfil.setTextSize(13);
         btnVerPerfil.setTextColor(getResources().getColor(R.color.fondo_principal, null));
-        btnVerPerfil.setBackgroundTintList(getResources().getColorStateList(R.color.primario, null));
+        btnVerPerfil.setBackgroundResource(R.drawable.button_secondary_rounded);
+        btnVerPerfil.setAllCaps(false);
         btnVerPerfil.setOnClickListener(v -> {
-            // Abrir PerfilUsuarioActivity con el userId
             int targetUserId = usuario.optInt("id", -1);
             Log.d(TAG, "Abriendo perfil de usuario ID: " + targetUserId);
 
@@ -301,29 +388,14 @@ public class Home2Activity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Botón Conectar
-        Button btnConectar = new Button(this);
-        LinearLayout.LayoutParams btnConectarParams = new LinearLayout.LayoutParams(
-                0,
-                (int) (32 * getResources().getDisplayMetrics().density),
-                1f
-        );
-        btnConectar.setLayoutParams(btnConectarParams);
-        btnConectar.setText("Conectar");
-        btnConectar.setTextSize(12);
-        btnConectar.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
-        btnConectar.setBackgroundTintList(getResources().getColorStateList(R.color.secundario, null));
-        btnConectar.setOnClickListener(v -> {
-            // TODO: Iniciar proceso de conexión
-            Log.d(TAG, "Conectar con usuario ID: " + usuario.optInt("id", -1));
-        });
-
         // Agregar botones al layout
-        botonesLayout.addView(btnVerPerfil);
         botonesLayout.addView(btnConectar);
+        botonesLayout.addView(btnVerPerfil);
 
-        // Agregar todo al card
+        // Agregar todo al card con jerarquía visual clara
         cardLayout.addView(headerLayout);
+        cardLayout.addView(ensenaLabel);
+        cardLayout.addView(habilidadesContainer);
         cardLayout.addView(botonesLayout);
 
         return cardLayout;
@@ -346,35 +418,121 @@ public class Home2Activity extends AppCompatActivity {
                     String responseData = response.body().string();
                     JSONArray habilidadesArray = new JSONArray(responseData);
 
-                    StringBuilder habilidades = new StringBuilder();
-                    int maxHabilidades = Math.min(3, habilidadesArray.length());
-
-                    for (int i = 0; i < maxHabilidades; i++) {
-                        JSONObject habilidad = habilidadesArray.getJSONObject(i);
-                        String nomHabilidad = habilidad.optString("nomHabilidad", "");
-                        if (!nomHabilidad.isEmpty()) {
-                            if (habilidades.length() > 0) {
-                                habilidades.append("\n");
-                            }
-                            habilidades.append(nomHabilidad);
-                        }
-                    }
-
-                    String finalText = habilidades.length() > 0 ? habilidades.toString() : "Sin habilidades";
-
                     runOnUiThread(() -> {
-                        habilidadesTextView.setText(finalText);
+                        // Obtener el contenedor padre de forma segura
+                        LinearLayout habilidadesContainer = null;
+                        if (habilidadesTextView != null && habilidadesTextView.getParent() instanceof LinearLayout) {
+                            habilidadesContainer = (LinearLayout) habilidadesTextView.getParent();
+                        }
+
+                        if (habilidadesContainer == null) {
+                            Log.e(TAG, "Error: habilidadesContainer is null");
+                            return;
+                        }
+
+                        // Remover el TextView temporal "Cargando..." de forma segura
+                        try {
+                            habilidadesContainer.removeView(habilidadesTextView);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error removing temporary view: " + e.getMessage());
+                        }
+
+                        // Crear chips individuales para cada habilidad (máximo 3)
+                        int maxHabilidades = Math.min(3, habilidadesArray.length());
+
+                        if (maxHabilidades == 0) {
+                            // Mostrar mensaje si no hay habilidades
+                            TextView noHabilidades = new TextView(Home2Activity.this);
+                            noHabilidades.setText("Sin habilidades");
+                            noHabilidades.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+                            noHabilidades.setTextSize(12);
+                            noHabilidades.setTypeface(null, android.graphics.Typeface.ITALIC);
+                            habilidadesContainer.addView(noHabilidades);
+                        } else {
+                            for (int i = 0; i < maxHabilidades; i++) {
+                                try {
+                                    JSONObject habilidad = habilidadesArray.getJSONObject(i);
+                                    String nomHabilidad = habilidad.optString("nomHabilidad", "");
+
+                                    if (!nomHabilidad.isEmpty()) {
+                                        // Crear chip individual con bordes redondeados
+                                        TextView chipHabilidad = new TextView(Home2Activity.this);
+                                        chipHabilidad.setText(nomHabilidad);
+                                        chipHabilidad.setTextColor(getResources().getColor(android.R.color.black, null));
+                                        chipHabilidad.setTextSize(12);
+                                        chipHabilidad.setTypeface(null, android.graphics.Typeface.BOLD);
+                                        chipHabilidad.setBackgroundResource(R.drawable.skill_chip_background);
+                                        chipHabilidad.setGravity(android.view.Gravity.CENTER);
+
+                                        // Configurar padding y margins para el chip
+                                        chipHabilidad.setPadding(
+                                                (int) (12 * getResources().getDisplayMetrics().density),
+                                                (int) (6 * getResources().getDisplayMetrics().density),
+                                                (int) (12 * getResources().getDisplayMetrics().density),
+                                                (int) (6 * getResources().getDisplayMetrics().density)
+                                        );
+
+                                        LinearLayout.LayoutParams chipParams = new LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                LinearLayout.LayoutParams.WRAP_CONTENT
+                                        );
+                                        chipParams.setMarginEnd((int) (8 * getResources().getDisplayMetrics().density));
+                                        chipHabilidad.setLayoutParams(chipParams);
+
+                                        habilidadesContainer.addView(chipHabilidad);
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error processing habilidad " + i + ": " + e.getMessage());
+                                }
+                            }
+                        }
                     });
                 } else {
                     runOnUiThread(() -> {
-                        habilidadesTextView.setText("Sin habilidades");
+                        // Manejo de error de forma segura
+                        LinearLayout habilidadesContainer = null;
+                        if (habilidadesTextView != null && habilidadesTextView.getParent() instanceof LinearLayout) {
+                            habilidadesContainer = (LinearLayout) habilidadesTextView.getParent();
+                        }
+
+                        if (habilidadesContainer != null) {
+                            try {
+                                habilidadesContainer.removeView(habilidadesTextView);
+                                TextView noHabilidades = new TextView(Home2Activity.this);
+                                noHabilidades.setText("Sin habilidades");
+                                noHabilidades.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+                                noHabilidades.setTextSize(12);
+                                noHabilidades.setTypeface(null, android.graphics.Typeface.ITALIC);
+                                habilidadesContainer.addView(noHabilidades);
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error handling no skills case: " + e.getMessage());
+                            }
+                        }
                     });
                 }
                 response.close();
             } catch (Exception e) {
                 Log.e(TAG, "Error loading habilidades for user " + userId + ": " + e.getMessage());
                 runOnUiThread(() -> {
-                    habilidadesTextView.setText("Sin habilidades");
+                    // Manejo de error de excepción de forma segura
+                    LinearLayout habilidadesContainer = null;
+                    if (habilidadesTextView != null && habilidadesTextView.getParent() instanceof LinearLayout) {
+                        habilidadesContainer = (LinearLayout) habilidadesTextView.getParent();
+                    }
+
+                    if (habilidadesContainer != null) {
+                        try {
+                            habilidadesContainer.removeView(habilidadesTextView);
+                            TextView errorHabilidades = new TextView(Home2Activity.this);
+                            errorHabilidades.setText("Error al cargar");
+                            errorHabilidades.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+                            errorHabilidades.setTextSize(12);
+                            errorHabilidades.setTypeface(null, android.graphics.Typeface.ITALIC);
+                            habilidadesContainer.addView(errorHabilidades);
+                        } catch (Exception ex) {
+                            Log.e(TAG, "Error handling exception case: " + ex.getMessage());
+                        }
+                    }
                 });
             }
         }).start();
