@@ -101,9 +101,9 @@
     <string name="default_web_client_id" translatable="false">304174422931-de9daiagarapld5at6b4hlt7t29qi9qa.apps.googleusercontent.com</string>
 
     <!-- Reuniones strings -->
-    <string name="reuniones_pendientes" translatable="false">Reuniones Pendientes</string>
-    <string name="aceptar" translatable="false">Aceptar</string>
-    <string name="rechazar" translatable="false">Rechazar</string>
+    <string name="reuniones_pendientes">Reuniones Pendientes</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="rechazar">Rechazar</string>
     <string name="verificaciones">Verificaciones</string>
     <string name="email_verificado" translatable="false">• Email verificado</string>
     <string name="identidad_verificada" translatable="false">• Identidad verificada</string>

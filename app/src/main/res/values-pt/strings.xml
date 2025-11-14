@@ -66,6 +66,7 @@
     <string name="save">Guardar</string>
     <string name="profile_pic">Foto de perfil</string>
     <string name="distance">Distância</string>
+    <string name="rechazar">Rejeitar</string>
     <string name="verificaciones">Verificações</string>
     <string name="contenido_de_habilidades">Conteúdo de Competências</string>
     <string name="solicitar_intercambioH">Solicitar Intercâmbio</string>
@@ -76,4 +77,6 @@
     <string name="habilidades">Competências</string>
     <string name="intereses">Interesses:</string>
     <string name="sobre_mg">Sobre mim</string>
+    <string name="reuniones_pendientes">Reuniões pendentes</string>
+    <string name="aceptar">Aceitar</string>
 </resources>

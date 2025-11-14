@@ -66,6 +66,7 @@
     <string name="save">Speichern</string>
     <string name="profile_pic">Profilfoto</string>
     <string name="distance">Entfernung</string>
+    <string name="rechazar">Ablehnen</string>
     <string name="verificaciones">Überprüfungen</string>
     <string name="contenido_de_habilidades">Inhalt der Fähigkeiten</string>
     <string name="solicitar_intercambioH">Austausch beantragen</string>
@@ -76,4 +77,6 @@
     <string name="habilidades">Fähigkeiten</string>
     <string name="intereses">Interessen:</string>
     <string name="sobre_mg">Über mich</string>
+    <string name="reuniones_pendientes">Ausstehende Besprechungen</string>
+    <string name="aceptar">Akzeptieren</string>
 </resources>
