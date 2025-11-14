@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,7 +41,8 @@ import okhttp3.Response;
 public class RegisterActivity extends AppCompatActivity {
 
     // Componentes de la UI
-    private TextInputEditText etFullName, etEmail, etPassword, etConfirmPassword;
+    private TextInputEditText etFullName, etLastName, etEmail, etPassword, etConfirmPassword;
+    private EditText etPhone, etBiography;
     private MaterialButton btnRegister;
     private TextView tvSignInLink;
     private ProgressBar progressBar;
@@ -62,9 +65,12 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private void initializeViews() {
         etFullName = findViewById(R.id.etFullName);
+        etLastName = findViewById(R.id.etApellido);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
+        etPhone = findViewById(R.id.etPhoneNumber);
+        etBiography = findViewById(R.id.etBiography);
         btnRegister = findViewById(R.id.btnRegister);
         tvSignInLink = findViewById(R.id.tvSignInLink);
         progressBar = findViewById(R.id.progressBar);
@@ -87,31 +93,39 @@ public class RegisterActivity extends AppCompatActivity {
     @SuppressLint("NewApi")
     private void registerUser() {
         String fullName = getText(etFullName);
-        String lastName = "Apellido"; // Aquí puedes obtener el apellido del usuario si se agrega un campo en la UI
+        String lastName = getText(etLastName);
         String email = getText(etEmail);
         String password = getText(etPassword);
         String confirmPassword = getText(etConfirmPassword);
-        String biography = "Esta es mi biografía"; // Aquí puedes obtener la biografía del usuario si se agrega un campo en la UI
+        String phone = getText(etPhone);
+        String biography = getText(etBiography);
 
         // Validar los datos de entrada
-        if (!validateInputs(fullName, email, password, confirmPassword)) {
+        if (!validateInputs(fullName, lastName, email, password, confirmPassword)) {
             return;
         }
 
         showLoading(true);
 
         // Enviar datos a la API
-        sendUserDataToApi(fullName, lastName, email, password, selectedImageUri, biography);
+        sendUserDataToApi(fullName, lastName, email, password, phone, selectedImageUri, biography);
     }
 
     /**
      * Valida los datos de entrada del formulario
      */
-    private boolean validateInputs(String fullName, String email, String password, String confirmPassword) {
+    private boolean validateInputs(String fullName, String lastName, String email, String password, String confirmPassword) {
         // Validar nombre completo
         if (TextUtils.isEmpty(fullName)) {
             etFullName.setError("El nombre es obligatorio");
             etFullName.requestFocus();
+            return false;
+        }
+
+        // Validar apellido
+        if (TextUtils.isEmpty(lastName)) {
+            etLastName.setError("El apellido es obligatorio");
+            etLastName.requestFocus();
             return false;
         }
 
@@ -204,6 +218,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
+     * Obtiene el texto de un EditText de forma segura
+     */
+    private String getText(EditText editText) {
+        return editText.getText() != null ? editText.getText().toString().trim() : "";
+    }
+
+    /**
      * Muestra un mensaje Toast
      */
     private void showToast(String message) {
@@ -214,7 +235,7 @@ public class RegisterActivity extends AppCompatActivity {
      * Envía los datos del usuario a la API
      */
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    private void sendUserDataToApi(String fullName, String lastName, String email, String password, Uri profileImageUri, String biography) {
+    private void sendUserDataToApi(String fullName, String lastName, String email, String password, String phone, Uri profileImageUri, String biography) {
         new Thread(() -> {
             try {
                 OkHttpClient client = new OkHttpClient();
@@ -225,7 +246,8 @@ public class RegisterActivity extends AppCompatActivity {
                 builder.addFormDataPart("apellido", lastName);
                 builder.addFormDataPart("email", email);
                 builder.addFormDataPart("password", password);
-                builder.addFormDataPart("biografia", biography); // Agregar biografía
+                builder.addFormDataPart("telefono", phone != null && !phone.isEmpty() ? phone : "");
+                builder.addFormDataPart("biografia", biography != null && !biography.isEmpty() ? biography : "");
 
                 if (profileImageUri != null) {
                     File file = new File(getCacheDir(), "profile_image.jpg");
@@ -255,29 +277,22 @@ public class RegisterActivity extends AppCompatActivity {
 
                         // Intentar parsear el ID del usuario de la respuesta
                         try {
-                            org.json.JSONObject jsonResponse = new org.json.JSONObject(responseBody);
-                            int userId = -1;
+                            // La respuesta es: "Usuario guardado exitosamente con ID: X"
+                            if (responseBody.contains("ID:")) {
+                                String[] parts = responseBody.split("ID:");
+                                if (parts.length > 1) {
+                                    String idStr = parts[1].trim();
+                                    int userId = Integer.parseInt(idStr);
 
-                            // Intentar diferentes nombres de campo para el ID
-                            if (jsonResponse.has("idUsuario")) {
-                                userId = jsonResponse.getInt("idUsuario");
-                            } else if (jsonResponse.has("id")) {
-                                userId = jsonResponse.getInt("id");
-                            } else if (jsonResponse.has("id_usuario")) {
-                                userId = jsonResponse.getInt("id_usuario");
-                            }
-
-                            if (userId != -1) {
-                                // Guardar el ID en SharedPreferences
-                                android.content.SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
-                                prefs.edit()
-                                    .putInt("userId", userId)
-                                    .putString("userEmail", email)
-                                    .putString("userName", fullName)
-                                    .apply();
-                                android.util.Log.d("RegisterActivity", "userId guardado en SharedPreferences: " + userId);
-                            } else {
-                                android.util.Log.w("RegisterActivity", "No se pudo obtener el ID del usuario de la respuesta");
+                                    // Guardar el ID en SharedPreferences
+                                    android.content.SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+                                    prefs.edit()
+                                        .putInt("userId", userId)
+                                        .putString("userEmail", email)
+                                        .putString("userName", fullName)
+                                        .apply();
+                                    android.util.Log.d("RegisterActivity", "userId guardado en SharedPreferences: " + userId);
+                                }
                             }
                         } catch (Exception e) {
                             android.util.Log.e("RegisterActivity", "Error parseando respuesta: " + e.getMessage());
@@ -298,6 +313,8 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
             } catch (Exception e) {
+                android.util.Log.e("RegisterActivity", "Error en sendUserDataToApi: " + e.getMessage());
+                e.printStackTrace();
                 runOnUiThread(() -> {
                     showLoading(false);
                     showToast("Error: " + e.getMessage());
@@ -314,7 +331,17 @@ public class RegisterActivity extends AppCompatActivity {
             result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null && result.getData().getData() != null) {
                     selectedImageUri = result.getData().getData();
-                    ivProfilePhoto.setImageURI(selectedImageUri);
+
+                    // Mostrar previsualización circular usando Picasso
+                    Picasso.get()
+                        .load(selectedImageUri)
+                        .transform(new CircularTransformation())
+                        .placeholder(R.drawable.ic_profile_placeholder)
+                        .error(R.drawable.ic_profile_placeholder)
+                        .into(ivProfilePhoto);
+
+                    // Ocultar el ícono de cámara después de seleccionar imagen
+                    ivCameraIcon.setVisibility(View.GONE);
                 }
             }
     );
