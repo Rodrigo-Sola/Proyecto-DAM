@@ -42,6 +42,7 @@ public class Home2Activity extends AppCompatActivity {
     private TextView nomUser;
     private LinearLayout usuariosContainer;
     private LinearLayout reunionesContainer;
+    private ImageView imgPerfilHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,13 +87,44 @@ public class Home2Activity extends AppCompatActivity {
     private void updateUserUI() {
         SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
         String displayName = prefs.getString("userName", "Usuario");
-        nomUser.setText("Bienvenido " + displayName);
+        String userPhoto = prefs.getString("userPhoto", "");
+
+        nomUser.setText(displayName);
+
+        // Cargar imagen de perfil del usuario actual
+        loadCurrentUserProfileImage(userPhoto);
+
+        // Configurar clic en el icono de perfil para redirigir a perfil
+        imgPerfilHeader.setOnClickListener(v -> {
+            Intent intent = new Intent(Home2Activity.this, perfil.class);
+            startActivity(intent);
+        });
     }
+
+    private void loadCurrentUserProfileImage(String fotoPerfil) {
+        if (!fotoPerfil.isEmpty()) {
+            String filename = fotoPerfil.contains("/")
+                ? fotoPerfil.substring(fotoPerfil.lastIndexOf("/") + 1)
+                : fotoPerfil;
+            String imageUrl = "http://172.193.118.141:8080/images/" + filename;
+
+            Picasso.get()
+                .load(imageUrl)
+                .transform(new CircularTransformation())
+                .placeholder(R.drawable.ic_profile_placeholder)
+                .error(R.drawable.ic_profile_placeholder)
+                .into(imgPerfilHeader);
+        } else {
+            imgPerfilHeader.setImageResource(R.drawable.ic_profile_placeholder);
+        }
+    }
+
 
     private void inicialzarView() {
         nomUser = findViewById(R.id.Userinfo);
         usuariosContainer = findViewById(R.id.usuariosContainer);
         reunionesContainer = findViewById(R.id.reunionesContainer);
+        imgPerfilHeader = findViewById(R.id.imgPerfilHeader);
     }
 
 
@@ -167,41 +199,43 @@ public class Home2Activity extends AppCompatActivity {
     }
 
     private LinearLayout createUserCard(JSONObject usuario) throws Exception {
-        // Card container
+        // Card container con bordes redondeados
         LinearLayout cardLayout = new LinearLayout(this);
         cardLayout.setOrientation(LinearLayout.VERTICAL);
-        cardLayout.setBackgroundResource(R.color.terciario);
+        cardLayout.setBackgroundResource(R.drawable.card_rounded_background);
 
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
-                (int) (280 * getResources().getDisplayMetrics().density),
-                LinearLayout.LayoutParams.WRAP_CONTENT
+            (int) (320 * getResources().getDisplayMetrics().density),
+            LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        cardParams.setMarginEnd((int) (12 * getResources().getDisplayMetrics().density));
+        cardParams.setMarginEnd((int) (16 * getResources().getDisplayMetrics().density));
+        cardParams.bottomMargin = (int) (12 * getResources().getDisplayMetrics().density);
         cardLayout.setLayoutParams(cardParams);
         cardLayout.setPadding(
-                (int) (16 * getResources().getDisplayMetrics().density),
-                (int) (16 * getResources().getDisplayMetrics().density),
-                (int) (16 * getResources().getDisplayMetrics().density),
-                (int) (16 * getResources().getDisplayMetrics().density)
+            (int) (20 * getResources().getDisplayMetrics().density),
+            (int) (20 * getResources().getDisplayMetrics().density),
+            (int) (20 * getResources().getDisplayMetrics().density),
+            (int) (20 * getResources().getDisplayMetrics().density)
         );
-        cardLayout.setElevation(4 * getResources().getDisplayMetrics().density);
+        cardLayout.setElevation(8 * getResources().getDisplayMetrics().density);
 
-        // Header layout (imagen + info)
+        // Header layout (imagen + info básica)
         LinearLayout headerLayout = new LinearLayout(this);
         headerLayout.setOrientation(LinearLayout.HORIZONTAL);
+        headerLayout.setGravity(android.view.Gravity.CENTER_VERTICAL);
         LinearLayout.LayoutParams headerParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
         );
         headerLayout.setLayoutParams(headerParams);
 
-        // Imagen de perfil circular
+        // Imagen de perfil circular más grande y prominente
         ImageView imgPerfil = new ImageView(this);
         LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(
-                (int) (60 * getResources().getDisplayMetrics().density),
-                (int) (60 * getResources().getDisplayMetrics().density)
+            (int) (70 * getResources().getDisplayMetrics().density),
+            (int) (70 * getResources().getDisplayMetrics().density)
         );
-        imgParams.setMarginEnd((int) (12 * getResources().getDisplayMetrics().density));
+        imgParams.setMarginEnd((int) (16 * getResources().getDisplayMetrics().density));
         imgPerfil.setLayoutParams(imgParams);
         imgPerfil.setBackgroundResource(R.drawable.circular_image);
         imgPerfil.setClipToOutline(true);
@@ -211,55 +245,98 @@ public class Home2Activity extends AppCompatActivity {
         String fotoPerfil = usuario.optString("fotoPerfil", "");
         if (!fotoPerfil.isEmpty()) {
             String filename = fotoPerfil.contains("/")
-                    ? fotoPerfil.substring(fotoPerfil.lastIndexOf("/") + 1)
-                    : fotoPerfil;
+                ? fotoPerfil.substring(fotoPerfil.lastIndexOf("/") + 1)
+                : fotoPerfil;
             String imageUrl = "http://172.193.118.141:8080/images/" + filename;
 
             Picasso.get()
-                    .load(imageUrl)
-                    .transform(new CircularTransformation())
-                    .placeholder(R.drawable.ic_profile_placeholder)
-                    .error(R.drawable.ic_profile_placeholder)
-                    .into(imgPerfil);
+                .load(imageUrl)
+                .transform(new CircularTransformation())
+                .placeholder(R.drawable.ic_profile_placeholder)
+                .error(R.drawable.ic_profile_placeholder)
+                .into(imgPerfil);
         } else {
             imgPerfil.setImageResource(R.drawable.ic_profile_placeholder);
         }
 
-        // Info layout
+        // Info layout con mejor jerarquía visual
         LinearLayout infoLayout = new LinearLayout(this);
         infoLayout.setOrientation(LinearLayout.VERTICAL);
+        infoLayout.setGravity(android.view.Gravity.CENTER_VERTICAL);
         LinearLayout.LayoutParams infoParams = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1f
+            0,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            1f
         );
         infoLayout.setLayoutParams(infoParams);
 
-        // Nombre del usuario
+        // Nombre del usuario con tipografía destacada
         TextView nombreTextView = new TextView(this);
         String nombre = usuario.optString("nombre", "") + " " + usuario.optString("apellido", "");
         nombreTextView.setText(nombre);
         nombreTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
-        nombreTextView.setTextSize(16);
+        nombreTextView.setTextSize(18);
         nombreTextView.setTypeface(null, android.graphics.Typeface.BOLD);
+        nombreTextView.setMaxLines(1);
+        nombreTextView.setEllipsize(android.text.TextUtils.TruncateAt.END);
 
-        // Label "Enseña:"
-        TextView ensenaLabel = new TextView(this);
-        ensenaLabel.setText("Enseña:");
-        ensenaLabel.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
-        ensenaLabel.setTextSize(12);
-        LinearLayout.LayoutParams ensenaParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+        // Subtítulo profesional
+        TextView profesionTextView = new TextView(this);
+        profesionTextView.setText("Desarrollador & Mentor");
+        profesionTextView.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+        profesionTextView.setTextSize(14);
+        LinearLayout.LayoutParams profesionParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        ensenaParams.topMargin = (int) (6 * getResources().getDisplayMetrics().density);
+        profesionParams.topMargin = (int) (2 * getResources().getDisplayMetrics().density);
+        profesionTextView.setLayoutParams(profesionParams);
+
+        // Agregar nombre y profesión al info layout
+        infoLayout.addView(nombreTextView);
+        infoLayout.addView(profesionTextView);
+
+        // Agregar imagen e info al header
+        headerLayout.addView(imgPerfil);
+        headerLayout.addView(infoLayout);
+
+        // Sección "ENSEÑA" con mejor espaciado
+        TextView ensenaLabel = new TextView(this);
+        ensenaLabel.setText("ENSEÑA");
+        ensenaLabel.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+        ensenaLabel.setTextSize(12);
+        ensenaLabel.setTypeface(null, android.graphics.Typeface.BOLD);
+        ensenaLabel.setAllCaps(true);
+        LinearLayout.LayoutParams ensenaParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        ensenaParams.topMargin = (int) (20 * getResources().getDisplayMetrics().density);
+        ensenaParams.bottomMargin = (int) (8 * getResources().getDisplayMetrics().density);
         ensenaLabel.setLayoutParams(ensenaParams);
 
-        // Habilidades (se cargarán después)
+        // Container para habilidades con presentación horizontal para chips
+        LinearLayout habilidadesContainer = new LinearLayout(this);
+        habilidadesContainer.setOrientation(LinearLayout.HORIZONTAL);
+        habilidadesContainer.setGravity(android.view.Gravity.START);
+        LinearLayout.LayoutParams habilidadesContainerParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        habilidadesContainer.setLayoutParams(habilidadesContainerParams);
+
+        // TextView temporal para mostrar "Cargando..." (será reemplazado por chips)
         TextView habilidadesTextView = new TextView(this);
         habilidadesTextView.setText("Cargando...");
-        habilidadesTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
-        habilidadesTextView.setTextSize(10);
+        habilidadesTextView.setTextColor(getResources().getColor(R.color.primario, null));
+        habilidadesTextView.setTextSize(12);
+        habilidadesTextView.setTypeface(null, android.graphics.Typeface.ITALIC);
+        LinearLayout.LayoutParams habilidadesParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        habilidadesParams.bottomMargin = (int) (16 * getResources().getDisplayMetrics().density);
+        habilidadesTextView.setLayoutParams(habilidadesParams);
 
         // Cargar habilidades del usuario
         int userId = usuario.optInt("id", -1);
@@ -267,40 +344,51 @@ public class Home2Activity extends AppCompatActivity {
             loadUserHabilidades(userId, habilidadesTextView);
         }
 
-        // Agregar vistas al info layout
-        infoLayout.addView(nombreTextView);
-        infoLayout.addView(ensenaLabel);
-        infoLayout.addView(habilidadesTextView);
+        habilidadesContainer.addView(habilidadesTextView);
 
-        // Agregar imagen e info al header
-        headerLayout.addView(imgPerfil);
-        headerLayout.addView(infoLayout);
-
-        // Botones layout
+        // Botones layout con distribución mejorada
         LinearLayout botonesLayout = new LinearLayout(this);
-        botonesLayout.setOrientation(LinearLayout.HORIZONTAL);
+        botonesLayout.setOrientation(LinearLayout.VERTICAL);
+        botonesLayout.setGravity(android.view.Gravity.CENTER);
         LinearLayout.LayoutParams botonesParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        botonesParams.topMargin = (int) (12 * getResources().getDisplayMetrics().density);
+        botonesParams.topMargin = (int) (8 * getResources().getDisplayMetrics().density);
         botonesLayout.setLayoutParams(botonesParams);
 
-        // Botón Ver Perfil
+        // Botón principal "Conectar" con bordes redondeados
+        Button btnConectar = new Button(this);
+        LinearLayout.LayoutParams btnConectarParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            (int) (48 * getResources().getDisplayMetrics().density)
+        );
+        btnConectarParams.bottomMargin = (int) (8 * getResources().getDisplayMetrics().density);
+        btnConectar.setLayoutParams(btnConectarParams);
+        btnConectar.setText("Conectar");
+        btnConectar.setTextSize(14);
+        btnConectar.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
+        btnConectar.setBackgroundResource(R.drawable.button_primary_rounded);
+        btnConectar.setTypeface(null, android.graphics.Typeface.BOLD);
+        btnConectar.setAllCaps(false);
+        btnConectar.setOnClickListener(v -> {
+            // TODO: Iniciar proceso de conexión
+            Log.d(TAG, "Conectar con usuario ID: " + usuario.optInt("id", -1));
+        });
+
+        // Botón secundario "Ver Perfil" con bordes redondeados
         Button btnVerPerfil = new Button(this);
         LinearLayout.LayoutParams btnPerfilParams = new LinearLayout.LayoutParams(
-                0,
-                (int) (32 * getResources().getDisplayMetrics().density),
-                1f
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            (int) (40 * getResources().getDisplayMetrics().density)
         );
-        btnPerfilParams.setMarginEnd((int) (6 * getResources().getDisplayMetrics().density));
         btnVerPerfil.setLayoutParams(btnPerfilParams);
         btnVerPerfil.setText("Ver Perfil");
-        btnVerPerfil.setTextSize(12);
+        btnVerPerfil.setTextSize(13);
         btnVerPerfil.setTextColor(getResources().getColor(R.color.fondo_principal, null));
-        btnVerPerfil.setBackgroundTintList(getResources().getColorStateList(R.color.primario, null));
+        btnVerPerfil.setBackgroundResource(R.drawable.button_secondary_rounded);
+        btnVerPerfil.setAllCaps(false);
         btnVerPerfil.setOnClickListener(v -> {
-            // Abrir PerfilUsuarioActivity con el userId
             int targetUserId = usuario.optInt("id", -1);
             Log.d(TAG, "Abriendo perfil de usuario ID: " + targetUserId);
 
@@ -309,29 +397,14 @@ public class Home2Activity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Botón Conectar
-        Button btnConectar = new Button(this);
-        LinearLayout.LayoutParams btnConectarParams = new LinearLayout.LayoutParams(
-                0,
-                (int) (32 * getResources().getDisplayMetrics().density),
-                1f
-        );
-        btnConectar.setLayoutParams(btnConectarParams);
-        btnConectar.setText("Conectar");
-        btnConectar.setTextSize(12);
-        btnConectar.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
-        btnConectar.setBackgroundTintList(getResources().getColorStateList(R.color.secundario, null));
-        btnConectar.setOnClickListener(v -> {
-            // TODO: Iniciar proceso de conexión
-            Log.d(TAG, "Conectar con usuario ID: " + usuario.optInt("id", -1));
-        });
-
         // Agregar botones al layout
-        botonesLayout.addView(btnVerPerfil);
         botonesLayout.addView(btnConectar);
+        botonesLayout.addView(btnVerPerfil);
 
-        // Agregar todo al card
+        // Agregar todo al card con jerarquía visual clara
         cardLayout.addView(headerLayout);
+        cardLayout.addView(ensenaLabel);
+        cardLayout.addView(habilidadesContainer);
         cardLayout.addView(botonesLayout);
 
         return cardLayout;
@@ -344,9 +417,9 @@ public class Home2Activity extends AppCompatActivity {
                 String url = BASE_URL + "/habilidades/byUsuario?id=" + userId;
 
                 Request request = new Request.Builder()
-                        .url(url)
-                        .get()
-                        .build();
+                    .url(url)
+                    .get()
+                    .build();
 
                 Response response = client.newCall(request).execute();
 
@@ -354,35 +427,121 @@ public class Home2Activity extends AppCompatActivity {
                     String responseData = response.body().string();
                     JSONArray habilidadesArray = new JSONArray(responseData);
 
-                    StringBuilder habilidades = new StringBuilder();
-                    int maxHabilidades = Math.min(3, habilidadesArray.length());
-
-                    for (int i = 0; i < maxHabilidades; i++) {
-                        JSONObject habilidad = habilidadesArray.getJSONObject(i);
-                        String nomHabilidad = habilidad.optString("nomHabilidad", "");
-                        if (!nomHabilidad.isEmpty()) {
-                            if (habilidades.length() > 0) {
-                                habilidades.append("\n");
-                            }
-                            habilidades.append(nomHabilidad);
-                        }
-                    }
-
-                    String finalText = habilidades.length() > 0 ? habilidades.toString() : "Sin habilidades";
-
                     runOnUiThread(() -> {
-                        habilidadesTextView.setText(finalText);
+                        // Obtener el contenedor padre de forma segura
+                        LinearLayout habilidadesContainer = null;
+                        if (habilidadesTextView != null && habilidadesTextView.getParent() instanceof LinearLayout) {
+                            habilidadesContainer = (LinearLayout) habilidadesTextView.getParent();
+                        }
+
+                        if (habilidadesContainer == null) {
+                            Log.e(TAG, "Error: habilidadesContainer is null");
+                            return;
+                        }
+
+                        // Remover el TextView temporal "Cargando..." de forma segura
+                        try {
+                            habilidadesContainer.removeView(habilidadesTextView);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error removing temporary view: " + e.getMessage());
+                        }
+
+                        // Crear chips individuales para cada habilidad (máximo 3)
+                        int maxHabilidades = Math.min(3, habilidadesArray.length());
+
+                        if (maxHabilidades == 0) {
+                            // Mostrar mensaje si no hay habilidades
+                            TextView noHabilidades = new TextView(Home2Activity.this);
+                            noHabilidades.setText("Sin habilidades");
+                            noHabilidades.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+                            noHabilidades.setTextSize(12);
+                            noHabilidades.setTypeface(null, android.graphics.Typeface.ITALIC);
+                            habilidadesContainer.addView(noHabilidades);
+                        } else {
+                            for (int i = 0; i < maxHabilidades; i++) {
+                                try {
+                                    JSONObject habilidad = habilidadesArray.getJSONObject(i);
+                                    String nomHabilidad = habilidad.optString("nomHabilidad", "");
+
+                                    if (!nomHabilidad.isEmpty()) {
+                                        // Crear chip individual con bordes redondeados
+                                        TextView chipHabilidad = new TextView(Home2Activity.this);
+                                        chipHabilidad.setText(nomHabilidad);
+                                        chipHabilidad.setTextColor(getResources().getColor(android.R.color.black, null));
+                                        chipHabilidad.setTextSize(12);
+                                        chipHabilidad.setTypeface(null, android.graphics.Typeface.BOLD);
+                                        chipHabilidad.setBackgroundResource(R.drawable.skill_chip_background);
+                                        chipHabilidad.setGravity(android.view.Gravity.CENTER);
+
+                                        // Configurar padding y margins para el chip
+                                        chipHabilidad.setPadding(
+                                            (int) (12 * getResources().getDisplayMetrics().density),
+                                            (int) (6 * getResources().getDisplayMetrics().density),
+                                            (int) (12 * getResources().getDisplayMetrics().density),
+                                            (int) (6 * getResources().getDisplayMetrics().density)
+                                        );
+
+                                        LinearLayout.LayoutParams chipParams = new LinearLayout.LayoutParams(
+                                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                                            LinearLayout.LayoutParams.WRAP_CONTENT
+                                        );
+                                        chipParams.setMarginEnd((int) (8 * getResources().getDisplayMetrics().density));
+                                        chipHabilidad.setLayoutParams(chipParams);
+
+                                        habilidadesContainer.addView(chipHabilidad);
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Error processing habilidad " + i + ": " + e.getMessage());
+                                }
+                            }
+                        }
                     });
                 } else {
                     runOnUiThread(() -> {
-                        habilidadesTextView.setText("Sin habilidades");
+                        // Manejo de error de forma segura
+                        LinearLayout habilidadesContainer = null;
+                        if (habilidadesTextView != null && habilidadesTextView.getParent() instanceof LinearLayout) {
+                            habilidadesContainer = (LinearLayout) habilidadesTextView.getParent();
+                        }
+
+                        if (habilidadesContainer != null) {
+                            try {
+                                habilidadesContainer.removeView(habilidadesTextView);
+                                TextView noHabilidades = new TextView(Home2Activity.this);
+                                noHabilidades.setText("Sin habilidades");
+                                noHabilidades.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+                                noHabilidades.setTextSize(12);
+                                noHabilidades.setTypeface(null, android.graphics.Typeface.ITALIC);
+                                habilidadesContainer.addView(noHabilidades);
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error handling no skills case: " + e.getMessage());
+                            }
+                        }
                     });
                 }
                 response.close();
             } catch (Exception e) {
                 Log.e(TAG, "Error loading habilidades for user " + userId + ": " + e.getMessage());
                 runOnUiThread(() -> {
-                    habilidadesTextView.setText("Sin habilidades");
+                    // Manejo de error de excepción de forma segura
+                    LinearLayout habilidadesContainer = null;
+                    if (habilidadesTextView != null && habilidadesTextView.getParent() instanceof LinearLayout) {
+                        habilidadesContainer = (LinearLayout) habilidadesTextView.getParent();
+                    }
+
+                    if (habilidadesContainer != null) {
+                        try {
+                            habilidadesContainer.removeView(habilidadesTextView);
+                            TextView errorHabilidades = new TextView(Home2Activity.this);
+                            errorHabilidades.setText("Error al cargar");
+                            errorHabilidades.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
+                            errorHabilidades.setTextSize(12);
+                            errorHabilidades.setTypeface(null, android.graphics.Typeface.ITALIC);
+                            habilidadesContainer.addView(errorHabilidades);
+                        } catch (Exception ex) {
+                            Log.e(TAG, "Error handling exception case: " + ex.getMessage());
+                        }
+                    }
                 });
             }
         }).start();
@@ -522,7 +681,7 @@ public class Home2Activity extends AppCompatActivity {
             if (reunionesArray.length() == 0) {
                 // Mostrar mensaje de no hay reuniones
                 TextView noReunionesTextView = new TextView(this);
-                noReunionesTextView.setText("No tienes sesiones pendientes");
+                noReunionesTextView.setText("No tienes sesiones confirmadas");
                 noReunionesTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
                 noReunionesTextView.setTextSize(14);
                 noReunionesTextView.setTypeface(null, android.graphics.Typeface.ITALIC);
@@ -541,16 +700,40 @@ public class Home2Activity extends AppCompatActivity {
             SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
             int currentUserId = prefs.getInt("userId", -1);
 
-            // Mostrar cada reunión
+            // Filtrar solo reuniones confirmadas (estado = 2)
+            int reunionesMostradas = 0;
             for (int i = 0; i < reunionesArray.length(); i++) {
                 JSONObject reunion = reunionesArray.getJSONObject(i);
+                JSONObject estado = reunion.optJSONObject("idEstadoR");
 
-                // Crear card para la reunión
-                LinearLayout reunionCard = createReunionCard(reunion, currentUserId);
-                reunionesContainer.addView(reunionCard);
+                // Solo mostrar si está confirmada (estado = 2)
+                if (estado != null && estado.optInt("id", 0) == 2) {
+                    // Crear card para la reunión
+                    LinearLayout reunionCard = createReunionCard(reunion, currentUserId);
+                    reunionesContainer.addView(reunionCard);
+                    reunionesMostradas++;
+                }
             }
 
-            Log.d(TAG, "Displayed " + reunionesArray.length() + " reuniones");
+            // Si no hay reuniones confirmadas, mostrar mensaje
+            if (reunionesMostradas == 0) {
+                TextView noReunionesTextView = new TextView(this);
+                noReunionesTextView.setText("No tienes sesiones confirmadas");
+                noReunionesTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
+                noReunionesTextView.setTextSize(14);
+                noReunionesTextView.setTypeface(null, android.graphics.Typeface.ITALIC);
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.topMargin = (int) (16 * getResources().getDisplayMetrics().density);
+                noReunionesTextView.setLayoutParams(params);
+
+                reunionesContainer.addView(noReunionesTextView);
+            }
+
+            Log.d(TAG, "Displayed " + reunionesMostradas + " reuniones confirmadas de " + reunionesArray.length() + " totales");
         } catch (Exception e) {
             Log.e(TAG, "Error displaying reuniones: " + e.getMessage());
             e.printStackTrace();
@@ -562,17 +745,19 @@ public class Home2Activity extends AppCompatActivity {
         Log.d(TAG, "=== Creando card de reunión ===");
         Log.d(TAG, "Reunión completa: " + reunion.toString());
 
-        // Card container
+        // Card container VERTICAL principal con el background
         LinearLayout cardLayout = new LinearLayout(this);
         cardLayout.setOrientation(LinearLayout.VERTICAL);
-        cardLayout.setBackgroundResource(R.color.terciario);
-        cardLayout.setElevation(4 * getResources().getDisplayMetrics().density);
+        cardLayout.setBackgroundResource(R.drawable.session_card_background);
+        cardLayout.setElevation(6 * getResources().getDisplayMetrics().density);
 
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
         cardParams.bottomMargin = (int) (12 * getResources().getDisplayMetrics().density);
+        cardParams.setMarginStart((int) (8 * getResources().getDisplayMetrics().density));
+        cardParams.setMarginEnd((int) (8 * getResources().getDisplayMetrics().density));
         cardLayout.setLayoutParams(cardParams);
         cardLayout.setPadding(
                 (int) (16 * getResources().getDisplayMetrics().density),
@@ -580,6 +765,27 @@ public class Home2Activity extends AppCompatActivity {
                 (int) (16 * getResources().getDisplayMetrics().density),
                 (int) (16 * getResources().getDisplayMetrics().density)
         );
+
+        // Layout HORIZONTAL para el contenido principal (icono + info + estado)
+        LinearLayout contenidoHorizontalLayout = new LinearLayout(this);
+        contenidoHorizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+        contenidoHorizontalLayout.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        LinearLayout.LayoutParams contenidoHorizontalParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        contenidoHorizontalLayout.setLayoutParams(contenidoHorizontalParams);
+
+        // Icono de la sesión (school)
+        ImageView iconoSesion = new ImageView(this);
+        LinearLayout.LayoutParams iconoParams = new LinearLayout.LayoutParams(
+                (int) (40 * getResources().getDisplayMetrics().density),
+                (int) (40 * getResources().getDisplayMetrics().density)
+        );
+        iconoParams.setMarginEnd((int) (16 * getResources().getDisplayMetrics().density));
+        iconoSesion.setLayoutParams(iconoParams);
+        iconoSesion.setImageResource(R.drawable.school);
+        iconoSesion.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
         // Determinar el otro usuario
         JSONObject usuario1 = reunion.optJSONObject("idUsuario1");
@@ -604,9 +810,19 @@ public class Home2Activity extends AppCompatActivity {
             nombreOtroUsuario = "Usuario";
         }
 
+        // Contenido central con información de la reunión
+        LinearLayout contenidoLayout = new LinearLayout(this);
+        contenidoLayout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams contenidoParams = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+        );
+        contenidoLayout.setLayoutParams(contenidoParams);
+
         // Título de la reunión
         TextView tituloTextView = new TextView(this);
-        tituloTextView.setText("Sesión de intercambio");
+        tituloTextView.setText("Sesión confirmada");
         tituloTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
         tituloTextView.setTextSize(16);
         tituloTextView.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -616,13 +832,34 @@ public class Home2Activity extends AppCompatActivity {
         conQuienTextView.setText("con " + nombreOtroUsuario);
         conQuienTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
         conQuienTextView.setTextSize(14);
-
         LinearLayout.LayoutParams conQuienParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        conQuienParams.topMargin = (int) (4 * getResources().getDisplayMetrics().density);
+        conQuienParams.topMargin = (int) (2 * getResources().getDisplayMetrics().density);
         conQuienTextView.setLayoutParams(conQuienParams);
+
+        // Layout para fecha/hora con icono de reloj
+        LinearLayout fechaLayout = new LinearLayout(this);
+        fechaLayout.setOrientation(LinearLayout.HORIZONTAL);
+        fechaLayout.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        LinearLayout.LayoutParams fechaLayoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        fechaLayoutParams.topMargin = (int) (6 * getResources().getDisplayMetrics().density);
+        fechaLayout.setLayoutParams(fechaLayoutParams);
+
+        // Icono de reloj
+        ImageView iconoReloj = new ImageView(this);
+        LinearLayout.LayoutParams relojParams = new LinearLayout.LayoutParams(
+                (int) (16 * getResources().getDisplayMetrics().density),
+                (int) (16 * getResources().getDisplayMetrics().density)
+        );
+        relojParams.setMarginEnd((int) (6 * getResources().getDisplayMetrics().density));
+        iconoReloj.setLayoutParams(relojParams);
+        iconoReloj.setImageResource(R.drawable.clock);
+        iconoReloj.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
         // Fecha y hora
         TextView fechaTextView = new TextView(this);
@@ -652,7 +889,7 @@ public class Home2Activity extends AppCompatActivity {
 
         // Formatear fecha
         String fechaFormateada;
-        if (fechaReunion == null || fechaReunion.isEmpty() || fechaReunion.equals("null")) {
+        if (fechaReunion.isEmpty() || fechaReunion.equals("null")) {
             fechaFormateada = "Sin fecha programada";
             Log.d(TAG, "Fecha vacía, mostrando mensaje por defecto");
         } else {
@@ -664,14 +901,16 @@ public class Home2Activity extends AppCompatActivity {
         fechaTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
         fechaTextView.setTextSize(12);
 
-        LinearLayout.LayoutParams fechaParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        fechaParams.topMargin = (int) (4 * getResources().getDisplayMetrics().density);
-        fechaTextView.setLayoutParams(fechaParams);
+        // Agregar icono y fecha al layout de fecha
+        fechaLayout.addView(iconoReloj);
+        fechaLayout.addView(fechaTextView);
 
-        // Estado
+        // Agregar elementos al contenido central
+        contenidoLayout.addView(tituloTextView);
+        contenidoLayout.addView(conQuienTextView);
+        contenidoLayout.addView(fechaLayout);
+
+        // Estado como chip con mejor visibilidad
         TextView estadoTextView = new TextView(this);
         JSONObject estado = reunion.optJSONObject("idEstadoR");
         String nombreEstado = "Pendiente";
@@ -709,31 +948,40 @@ public class Home2Activity extends AppCompatActivity {
         }
 
         estadoTextView.setText(nombreEstado);
-        estadoTextView.setTextColor(getResources().getColor(colorEstado, null));
+        estadoTextView.setTextColor(getResources().getColor(android.R.color.white, null));
         estadoTextView.setTextSize(12);
         estadoTextView.setTypeface(null, android.graphics.Typeface.BOLD);
-
+        estadoTextView.setBackgroundResource(R.drawable.skill_chip_background);
+        estadoTextView.getBackground().setTint(getResources().getColor(colorEstado, null));
+        estadoTextView.setPadding(
+                (int) (12 * getResources().getDisplayMetrics().density),
+                (int) (6 * getResources().getDisplayMetrics().density),
+                (int) (12 * getResources().getDisplayMetrics().density),
+                (int) (6 * getResources().getDisplayMetrics().density)
+        );
         LinearLayout.LayoutParams estadoParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        estadoParams.topMargin = (int) (8 * getResources().getDisplayMetrics().density);
         estadoTextView.setLayoutParams(estadoParams);
 
-        // Agregar vistas al card
-        cardLayout.addView(tituloTextView);
-        cardLayout.addView(conQuienTextView);
-        cardLayout.addView(fechaTextView);
-        cardLayout.addView(estadoTextView);
+        // Agregar elementos al layout horizontal
+        contenidoHorizontalLayout.addView(iconoSesion);
+        contenidoHorizontalLayout.addView(contenidoLayout);
+        contenidoHorizontalLayout.addView(estadoTextView);
 
-        // Botón "Marcar como completada" - solo si no está completada o cancelada
+        // Agregar el layout horizontal al card principal
+        cardLayout.addView(contenidoHorizontalLayout);
+
+        // Agregar botón "Marcar como completada" DENTRO del card si aplica
         int idEstadoActual = estado != null ? estado.optInt("id", 1) : 1;
-        if (idEstadoActual != 3 && idEstadoActual != 4) { // No mostrar si ya está completada o cancelada
+        if (idEstadoActual != 3 && idEstadoActual != 4) {
             Button btnCompletar = new Button(this);
             btnCompletar.setText("Marcar como completada");
             btnCompletar.setTextSize(12);
             btnCompletar.setTextColor(getResources().getColor(R.color.fondo_principal, null));
-            btnCompletar.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_blue_dark, null));
+            btnCompletar.setBackgroundResource(R.drawable.button_secondary_rounded);
+            btnCompletar.setAllCaps(false);
 
             LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -748,6 +996,7 @@ public class Home2Activity extends AppCompatActivity {
                 mostrarDialogoConfirmacion(reunionId, nombreOtroUsuario);
             });
 
+            // Agregar el botón al card principal
             cardLayout.addView(btnCompletar);
         }
 

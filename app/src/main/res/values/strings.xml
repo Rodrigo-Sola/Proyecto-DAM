@@ -21,7 +21,7 @@
     <string name="skillswap" translatable="false">SkillSwap</string>
     <string name="subtitle">Intercambia conocimientos, crece juntos</string>
     <string name="welcome_back">¡Bienvenido de vuelta!</string>
-    <string name="welcome_desc">Inicia sesión para continuar intercambiando conocimientos</string>
+    <string name="welcome_desc">Inicia sesión para continuar\nintercambiando conocimientos</string>
     <string name="hint_email">Correo electrónico</string>
     <string name="hint_password">Contraseña</string>
     <string name="forgot_password">¿Olvidaste tu contraseña?</string>
@@ -99,6 +99,11 @@
 
     <!-- Google Sign-In -->
     <string name="default_web_client_id" translatable="false">304174422931-de9daiagarapld5at6b4hlt7t29qi9qa.apps.googleusercontent.com</string>
+
+    <!-- Reuniones strings -->
+    <string name="reuniones_pendientes" translatable="false">Reuniones Pendientes</string>
+    <string name="aceptar" translatable="false">Aceptar</string>
+    <string name="rechazar" translatable="false">Rechazar</string>
     <string name="verificaciones">Verificaciones</string>
     <string name="email_verificado" translatable="false">• Email verificado</string>
     <string name="identidad_verificada" translatable="false">• Identidad verificada</string>
