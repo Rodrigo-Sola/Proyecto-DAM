@@ -427,145 +427,24 @@
             android:layout_marginTop="32dp"
             android:layout_marginBottom="16dp" />
 
-        <!-- Habilidades de Ejemplo -->
+        <!-- Contenedor dinámico para las habilidades -->
         <LinearLayout
+            android:id="@+id/containerHabilidades"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/white"
-            android:padding="16dp"
-            android:layout_marginBottom="8dp"
-            android:elevation="2dp">
+            android:orientation="vertical" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Marketing Digital"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <ImageButton
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Eliminar habilidad"
-                    android:src="@drawable/ic_delete"
-                    app:tint="@color/primario"
-                    tools:ignore="TouchTargetSizeCheck" />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Marketing Digital"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nivel: Avanzado"
-                android:textColor="@color/primario"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_marginTop="2dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Disponible: Lunes a Viernes - 9:00 a 18:00"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Especialista en campañas publicitarias en redes sociales y SEO"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="12sp"
-                android:layout_marginTop="8dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <!-- Mensaje cuando no hay habilidades -->
+        <TextView
+            android:id="@+id/tvNoHabilidades"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/white"
-            android:padding="16dp"
-            android:elevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Programación Java"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <ImageButton
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Eliminar habilidad"
-                    android:src="@drawable/ic_delete"
-                    app:tint="@color/primario"
-                    tools:ignore="TouchTargetSizeCheck" />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tecnología y Programación"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nivel: Intermedio"
-                android:textColor="@color/primario"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_marginTop="2dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Disponible: Sábados y Domingos - 10:00 a 16:00"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Desarrollo de aplicaciones Android y aplicaciones web"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="12sp"
-                android:layout_marginTop="8dp" />
-
-        </LinearLayout>
+            android:text="No tienes habilidades registradas aún.\nAgrega tu primera habilidad usando el formulario de arriba."
+            android:textColor="@color/texto_oscuro"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:padding="32dp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

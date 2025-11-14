@@ -1,140 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
     tools:context=".ReunionesActivity">
 
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp"
-            android:paddingHorizontal="16dp">
+            android:text="@string/reuniones_pendientes"
+            android:textColor="@color/texto_oscuro"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
 
-            <!-- Primera sesión -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
             <LinearLayout
+                android:id="@+id/reunionesContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@color/terciario"
-                android:elevation="4dp"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="8dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Programación en Flu..."
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                <!-- Las reuniones se cargarán dinámicamente aquí -->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="con Carlos Rodríguez"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="22:22 - 12/11/2025"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Confirmada"
-                    android:textColor="@color/primario"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Segunda sesión -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:background="@color/terciario"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
+        </ScrollView>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Conversación en Inglés"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/white"
+            app:itemIconTint="@color/black"
+            app:itemTextColor="@color/black"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_nav_menu" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="con Ana Martínez"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="14sp" />
+    </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="00:22 - 14/11/2025"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="12sp" />
+</FrameLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Pendiente"
-                    android:textColor="@color/secundario"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Puedes agregar más sesiones aquí si necesitas -->
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/aggHabilidad"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="16dp"
-                android:src="@android:drawable/ic_input_add"
-                app:backgroundTint="#C08968"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-        </LinearLayout>
-
-
-    </ScrollView>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/white"
-        app:itemIconTint="@color/black"
-        app:itemTextColor="@color/black"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu" />
-
-
-</LinearLayout>

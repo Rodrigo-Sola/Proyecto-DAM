@@ -1,19 +1,15 @@
 package sv.edu.itca.proyecto_dam;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.picasso.Picasso;
 
@@ -26,59 +22,58 @@ import okhttp3.Response;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class perfil extends AppCompatActivity {
+public class PerfilUsuarioActivity extends AppCompatActivity {
 
-    private static final String TAG = "PerfilActivity";
+    private static final String TAG = "PerfilUsuarioActivity";
     private static final String BASE_URL = "http://172.193.118.141:8080/api";
 
     // UI Components
     private ImageView imgPerfil;
     private TextView tvNombre;
     private TextView tvUbicacion;
+    private Button btnSolicitarIntercambio;
 
     private int userId = -1;
+    private String userName = "";
     private String userBiografia = "";
     private JSONArray userOpiniones = new JSONArray();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Este layout se selecciona automáticamente según la versión de Android
+        // En API 31+ usará layout-v31/activity_perfil.xml
+        // En versiones anteriores usará layout/activity_perfil.xml
         setContentView(R.layout.activity_perfil);
 
+        // Obtener el userId del Intent
+        Intent intent = getIntent();
+        userId = intent.getIntExtra("userId", -1);
+
+        if (userId == -1) {
+            Toast.makeText(this, "Error: Usuario no identificado", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         initializeViews();
-        getUserId();
         loadUserData();
         loadUserSkills();
         loadUserOpinions();
         setupTabLayout();
-        hideSolicitarIntercambioButton();
-        setupLogoutButton();
-        setupFAB();
     }
+
 
     private void initializeViews() {
         imgPerfil = findViewById(R.id.imgPerfil);
         tvNombre = findViewById(R.id.tvNombre);
         tvUbicacion = findViewById(R.id.tvUbicacion);
-    }
+        btnSolicitarIntercambio = findViewById(R.id.btnSolicitarIntercambio);
 
-    private void getUserId() {
-        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
-        userId = prefs.getInt("userId", -1);
-
-        if (userId == -1) {
-            Toast.makeText(this, "Error: Usuario no identificado", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-    }
-
-    private void hideSolicitarIntercambioButton() {
-        // Ocultar el botón de "Solicitar Intercambio" ya que estás viendo tu propio perfil
-        Button btnSolicitarIntercambio = findViewById(R.id.btnSolicitarIntercambio);
-        if (btnSolicitarIntercambio != null) {
-            btnSolicitarIntercambio.setVisibility(View.GONE);
-            Log.d(TAG, "Botón 'Solicitar Intercambio' ocultado (perfil propio)");
-        }
+        // Configurar click listener del botón
+        btnSolicitarIntercambio.setOnClickListener(v -> {
+            abrirAgendarReunion();
+        });
     }
 
     private void loadUserData() {
@@ -105,7 +100,11 @@ public class perfil extends AppCompatActivity {
                             // Set user name with apellido
                             String nombre = userObj.optString("nombre", "");
                             String apellido = userObj.optString("apellido", "");
-                            tvNombre.setText(nombre + " " + apellido);
+                            String nombreCompleto = nombre + " " + apellido;
+                            tvNombre.setText(nombreCompleto);
+
+                            // Guardar nombre para usar al agendar reunión
+                            userName = nombreCompleto;
 
                             // Save biography for "Sobre mí" tab
                             userBiografia = userObj.optString("biografia", "");
@@ -152,13 +151,6 @@ public class perfil extends AppCompatActivity {
                                             public void onError(Exception e) {
                                                 Log.e(TAG, "❌ Error loading image from: " + imageUrl);
                                                 Log.e(TAG, "Error details: " + e.getMessage());
-                                                Log.e(TAG, "Suggestion: Verify the image exists at this URL in your browser");
-                                                // Try to provide helpful error message
-                                                runOnUiThread(() -> {
-                                                    Toast.makeText(perfil.this,
-                                                        "No se pudo cargar la imagen de perfil. Verifica que el archivo exista en el servidor.",
-                                                        Toast.LENGTH_LONG).show();
-                                                });
                                             }
                                         });
                             } else {
@@ -186,8 +178,6 @@ public class perfil extends AppCompatActivity {
         new Thread(() -> {
             try {
                 OkHttpClient client = new OkHttpClient();
-
-                // Endpoint correcto según el backend
                 String url = BASE_URL + "/habilidades/byUsuario?id=" + userId;
 
                 Log.d(TAG, "Loading skills from: " + url);
@@ -228,8 +218,6 @@ public class perfil extends AppCompatActivity {
         new Thread(() -> {
             try {
                 OkHttpClient client = new OkHttpClient();
-
-                // Endpoint para obtener opiniones del usuario (como receptor)
                 String url = BASE_URL + "/opiniones/byUsuario?id=" + userId;
 
                 Log.d(TAG, "Loading opinions from: " + url);
@@ -277,7 +265,7 @@ public class perfil extends AppCompatActivity {
             // Si no hay habilidades, mostrar un mensaje
             if (skillsArray.length() == 0) {
                 TextView noSkillsTextView = new TextView(this);
-                noSkillsTextView.setText("No tienes habilidades registradas");
+                noSkillsTextView.setText("No tiene habilidades registradas");
                 noSkillsTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
                 noSkillsTextView.setTextSize(14);
                 noSkillsTextView.setTypeface(null, android.graphics.Typeface.ITALIC);
@@ -360,92 +348,10 @@ public class perfil extends AppCompatActivity {
         }
     }
 
-
-    private void setupLogoutButton() {
-        // Buscar el contenedor principal del layout
-        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.frameLayout).getParent();
-
-        if (mainLayout != null) {
-            // Crear botón de logout
-            Button btnLogout = new Button(this);
-            btnLogout.setText("Cerrar Sesión");
-            btnLogout.setTextColor(getResources().getColor(R.color.fondo_principal, null));
-            btnLogout.setBackgroundTintList(getResources().getColorStateList(R.color.primario, null));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    (int) (48 * getResources().getDisplayMetrics().density)
-            );
-            params.topMargin = (int) (24 * getResources().getDisplayMetrics().density);
-            params.bottomMargin = (int) (100 * getResources().getDisplayMetrics().density); // Espacio para el FAB
-            btnLogout.setLayoutParams(params);
-
-            btnLogout.setOnClickListener(v -> logout());
-
-            // Agregar el botón al final del layout
-            mainLayout.addView(btnLogout);
-
-            Log.d(TAG, "Botón de logout agregado dinámicamente con margen para FAB");
-        } else {
-            Log.w(TAG, "No se pudo encontrar el layout principal para agregar el botón de logout");
-        }
-    }
-
-    private void setupFAB() {
-        // Crear FAB dinámicamente ya que no existe en el XML de activity_perfil
-        Log.d(TAG, "Creando FAB de agregar habilidades dinámicamente");
-
-        // Buscar el contenedor raíz
-        View rootView = findViewById(android.R.id.content);
-
-        if (rootView instanceof FrameLayout) {
-            FloatingActionButton fab = new FloatingActionButton(this);
-            fab.setImageResource(android.R.drawable.ic_input_add);
-            fab.setBackgroundTintList(getResources().getColorStateList(R.color.secundario, null));
-
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    (int) (56 * getResources().getDisplayMetrics().density),
-                    (int) (56 * getResources().getDisplayMetrics().density)
-            );
-            params.gravity = android.view.Gravity.END | android.view.Gravity.BOTTOM;
-            params.setMargins(
-                    (int) (16 * getResources().getDisplayMetrics().density),
-                    (int) (16 * getResources().getDisplayMetrics().density),
-                    (int) (16 * getResources().getDisplayMetrics().density),
-                    (int) (80 * getResources().getDisplayMetrics().density) // Espacio para bottom nav
-            );
-            fab.setLayoutParams(params);
-
-            fab.setOnClickListener(v -> {
-                Intent intent = new Intent(perfil.this, form.class);
-                startActivity(intent);
-            });
-
-            ((FrameLayout) rootView).addView(fab);
-            Log.d(TAG, "FAB agregado dinámicamente exitosamente");
-        } else {
-            Log.w(TAG, "No se pudo agregar FAB: rootView no es FrameLayout");
-        }
-    }
-
-    private void logout() {
-        // Limpiar SharedPreferences
-        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
-        prefs.edit().clear().apply();
-
-        Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
-
-        // Navegar al login
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
-
     private void setupTabLayout() {
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         LinearLayout habilidadesContent = findViewById(R.id.habilidadesContent);
-        ScrollView resenasContent = findViewById(R.id.resenasContent); // Cambiado a ScrollView
+        android.widget.ScrollView resenasContent = findViewById(R.id.resenasContent); // Cambiado a ScrollView
         LinearLayout sobreMiContent = findViewById(R.id.sobreMiContent);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -461,14 +367,12 @@ public class perfil extends AppCompatActivity {
                         habilidadesContent.setVisibility(View.GONE);
                         resenasContent.setVisibility(View.VISIBLE);
                         sobreMiContent.setVisibility(View.GONE);
-                        // Mostrar las reseñas
                         displayOpiniones();
                         break;
                     case 2:
                         habilidadesContent.setVisibility(View.GONE);
                         resenasContent.setVisibility(View.GONE);
                         sobreMiContent.setVisibility(View.VISIBLE);
-                        // Mostrar la biografía en la pestaña Sobre mí
                         displayBiografia();
                         break;
                 }
@@ -479,7 +383,6 @@ public class perfil extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                // Si se vuelve a seleccionar, actualizar el contenido
                 if (tab.getPosition() == 1) {
                     displayOpiniones();
                 } else if (tab.getPosition() == 2) {
@@ -497,19 +400,17 @@ public class perfil extends AppCompatActivity {
             return;
         }
 
-        // Limpiar contenido existente excepto el título (primer elemento)
         int childCount = sobreMiContent.getChildCount();
         for (int i = childCount - 1; i > 0; i--) {
             sobreMiContent.removeViewAt(i);
         }
 
-        // Crear TextView para la biografía
         TextView biografiaTextView = new TextView(this);
 
         if (userBiografia != null && !userBiografia.isEmpty()) {
             biografiaTextView.setText(userBiografia);
         } else {
-            biografiaTextView.setText("No has agregado una biografía aún.");
+            biografiaTextView.setText("Este usuario no ha agregado una biografía.");
             biografiaTextView.setTypeface(null, android.graphics.Typeface.ITALIC);
         }
 
@@ -529,7 +430,7 @@ public class perfil extends AppCompatActivity {
     }
 
     private void displayOpiniones() {
-        ScrollView resenasScrollView = findViewById(R.id.resenasContent);
+        android.widget.ScrollView resenasScrollView = findViewById(R.id.resenasContent);
 
         if (resenasScrollView == null) {
             Log.e(TAG, "resenasContent ScrollView is null");
@@ -554,7 +455,7 @@ public class perfil extends AppCompatActivity {
             // Si no hay opiniones, mostrar mensaje
             if (userOpiniones.length() == 0) {
                 TextView noOpinionesTextView = new TextView(this);
-                noOpinionesTextView.setText("Aún no has recibido reseñas.");
+                noOpinionesTextView.setText("Este usuario no ha recibido reseñas.");
                 noOpinionesTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
                 noOpinionesTextView.setTextSize(14);
                 noOpinionesTextView.setTypeface(null, android.graphics.Typeface.ITALIC);
@@ -574,8 +475,6 @@ public class perfil extends AppCompatActivity {
             // Mostrar cada opinión
             for (int i = 0; i < userOpiniones.length(); i++) {
                 JSONObject opinion = userOpiniones.getJSONObject(i);
-
-                // Crear card para la opinión
                 LinearLayout opinionCard = createOpinionCard(opinion);
                 resenasContent.addView(opinionCard);
             }
@@ -588,7 +487,6 @@ public class perfil extends AppCompatActivity {
     }
 
     private LinearLayout createOpinionCard(JSONObject opinion) throws Exception {
-        // Card container
         LinearLayout cardLayout = new LinearLayout(this);
         cardLayout.setOrientation(LinearLayout.VERTICAL);
         cardLayout.setBackgroundResource(R.color.terciario);
@@ -601,7 +499,6 @@ public class perfil extends AppCompatActivity {
         cardParams.topMargin = 24;
         cardLayout.setLayoutParams(cardParams);
 
-        // Header con nombre del autor y valoración
         LinearLayout headerLayout = new LinearLayout(this);
         headerLayout.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams headerParams = new LinearLayout.LayoutParams(
@@ -610,7 +507,6 @@ public class perfil extends AppCompatActivity {
         );
         headerLayout.setLayoutParams(headerParams);
 
-        // Nombre del autor
         TextView autorTextView = new TextView(this);
         JSONObject autor = opinion.optJSONObject("idAutor");
         String nombreAutor = "Usuario";
@@ -629,7 +525,6 @@ public class perfil extends AppCompatActivity {
         );
         autorTextView.setLayoutParams(autorParams);
 
-        // Valoración (estrellas)
         TextView valoracionTextView = new TextView(this);
         float valoracion = (float) opinion.optDouble("valorReunion", 0.0);
         String estrellas = getStarsString(valoracion);
@@ -640,7 +535,6 @@ public class perfil extends AppCompatActivity {
         headerLayout.addView(autorTextView);
         headerLayout.addView(valoracionTextView);
 
-        // Texto de la opinión
         TextView opinionTextView = new TextView(this);
         String opinionText = opinion.optString("opinion", "");
         opinionTextView.setText(opinionText);
@@ -654,7 +548,6 @@ public class perfil extends AppCompatActivity {
         opinionParams.topMargin = 16;
         opinionTextView.setLayoutParams(opinionParams);
 
-        // Agregar vistas al card
         cardLayout.addView(headerLayout);
         cardLayout.addView(opinionTextView);
 
@@ -675,5 +568,19 @@ public class perfil extends AppCompatActivity {
         }
 
         return stars.toString();
+    }
+
+    private void abrirAgendarReunion() {
+        if (userName == null || userName.isEmpty()) {
+            Toast.makeText(this, "Espera a que carguen los datos del usuario", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Log.d(TAG, "Abriendo AgendarReunionActivity para usuario: " + userName + " (ID: " + userId + ")");
+
+        Intent intent = new Intent(this, AgendarReunionActivity.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("userName", userName);
+        startActivity(intent);
     }
 }

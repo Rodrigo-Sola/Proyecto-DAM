@@ -7,18 +7,18 @@
     <string name="Onboarding1_description2">Intercambia conocimientos de forma fácil y divetida</string>
     <string name="Onboarding2_description">Nuestro sistema inteligente te conceta con personas qeu tiene las habilidades que buscas y quieren aprender lo que tu sabes.</string>
     <string name="Onboarding3_description">Forma parte de una red de aprendizaje donde cada intercambio te acerca más a tus objetivos personales y profecionales.</string>
-    <string name="Onboarding_count1">1/3</string>
-    <string name="Onboarding_count2">2/3</string>
-    <string name="Onboarding_count3">3/3</string>
+    <string name="Onboarding_count1" translatable="false">1/3</string>
+    <string name="Onboarding_count2" translatable="false">2/3</string>
+    <string name="Onboarding_count3" translatable="false">3/3</string>
     <string name="Onboarding_exit">Saltar</string>
-    <string name="onboarding_image_description">Onboarding Image</string>
+    <string name="onboarding_image_description" translatable="false">Onboarding Image</string>
     <string name="Onboarding_btn1">Saltar</string>
     <string name="Onboarding_btn3">Anterior</string>
     <string name="Onboarding_btn2">Siguiente</string>
     <string name="Onboarding_btn4">Comenzar</string>
     <!-- New strings for activity_main -->
-    <string name="app_logo">Logo de la aplicación</string>
-    <string name="skillswap">SkillSwap</string>
+    <string name="app_logo" translatable="false">Logo de la aplicación</string>
+    <string name="skillswap" translatable="false">SkillSwap</string>
     <string name="subtitle">Intercambia conocimientos, crece juntos</string>
     <string name="welcome_back">¡Bienvenido de vuelta!</string>
     <string name="welcome_desc">Inicia sesión para continuar\nintercambiando conocimientos</string>
@@ -27,12 +27,12 @@
     <string name="forgot_password">¿Olvidaste tu contraseña?</string>
     <string name="btn_login">Iniciar Sesión</string>
     <string name="divider_text">O continúa con</string>
-    <string name="google_login_desc">Google login</string>
-    <string name="google_text">Google</string>
-    <string name="github_login_desc">GitHub login</string>
-    <string name="github_text">GitHub</string>
-    <string name="facebook_login_desc">Facebook login</string>
-    <string name="facebook_text">Facebook</string>
+    <string name="google_login_desc" translatable="false">Google login</string>
+    <string name="google_text" translatable="false">Google</string>
+    <string name="github_login_desc" translatable="false">GitHub login</string>
+    <string name="github_text" translatable="false">GitHub</string>
+    <string name="facebook_login_desc" translatable="false">Facebook login</string>
+    <string name="facebook_text" translatable="false">Facebook</string>
     <string name="new_user_text">¿Nuevo usuario?</string>
     <string name="register_text">Regístrate</string>
 
@@ -63,14 +63,14 @@
     <string name="sign_in">Iniciar sesión</string>
 
     <!-- Profile Photo strings -->
-    <string name="profile_photo_description">Foto de perfil del usuario</string>
+    <string name="profile_photo_description" translatable="false">Foto de perfil del usuario</string>
     <string name="add_photo_description">Agregar foto de perfil</string>
     <string name="profile_photo_label">Foto de perfil</string>
     <string name="profile_photo_hint">Toca para agregar foto</string>
 
     <!-- Phone Number strings -->
     <string name="phone_number_label">Número de teléfono</string>
-    <string name="phone_number_hint">123 456 789</string>
+    <string name="phone_number_hint" translatable="false">123 456 789</string>
     <string name="country_flag_description">Bandera del país</string>
     <string name="dropdown_icon_description">Seleccionar código de país</string>
 
@@ -85,10 +85,10 @@
     <string name="biography_hint">Cuéntanos un poco sobre ti y tus intereses...</string>
 
     <!-- Terms and Privacy strings -->
-    <string name="terms_conditions_text">Acepto los Términos y Condiciones de SkillSwap</string>
-    <string name="privacy_policy_text">Acepto la Política de Privacidad de SkillSwap</string>
-    <string name="default_country_code">+34</string>
-    <string name="biography_counter">0/200</string>
+    <string name="terms_conditions_text">Acepto los Términos y Condiciones de SkillZone</string>
+    <string name="privacy_policy_text">Acepto la Política de Privacidad de SkillZone</string>
+    <string name="default_country_code" translatable="false">+34</string>
+    <string name="biography_counter" translatable="false">0/200</string>
 
     <!-- barra de busqueda strings -->
     <string name="search">Buscar</string>
@@ -98,36 +98,41 @@
     <string name="distance">Distancia</string>
 
     <!-- Google Sign-In -->
-    <string name="default_web_client_id">304174422931-de9daiagarapld5at6b4hlt7t29qi9qa.apps.googleusercontent.com</string>
+    <string name="default_web_client_id" translatable="false">304174422931-de9daiagarapld5at6b4hlt7t29qi9qa.apps.googleusercontent.com</string>
+
+    <!-- Reuniones strings -->
+    <string name="reuniones_pendientes">Reuniones Pendientes</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="rechazar">Rechazar</string>
     <string name="verificaciones">Verificaciones</string>
-    <string name="email_verificado">• Email verificado</string>
-    <string name="identidad_verificada">• Identidad verificada</string>
+    <string name="email_verificado" translatable="false">• Email verificado</string>
+    <string name="identidad_verificada" translatable="false">• Identidad verificada</string>
     <string name="contenido_de_habilidades">Contenido de Habilidades</string>
-    <string name="madrid_espa_a">Madrid, España</string>
-    <string name="mar_a_gonz_lez">María González</string>
-    <string name="foto_de_perfil_de_mar_a_gonz_lez">Foto de perfil de María González</string>
+    <string name="madrid_espa_a" translatable="false">Madrid, España</string>
+    <string name="mar_a_gonz_lez" translatable="false">María González</string>
+    <string name="foto_de_perfil_de_mar_a_gonz_lez" translatable="false">Foto de perfil de María González</string>
     <string name="solicitar_intercambio">Solicitar Intercambio</string>
     <string name="sobre_m">Sobre Mí</string>
     <string name="rese_as">Reseñas</string>
     <string name="habilidades">Habilidades</string>
-    <string name="tecnolog_a_n_marketing_digital_n_programaci_n_n_dise_o_n_emprendimiento">• Tecnología\n• Marketing Digital\n• Programación\n• Diseño\n• Emprendimiento</string>
-    <string name="soy_mar_a_especialista_en_marketing_digital_con_m_s_de_5_a_os_de_experiencia_en_el_sector_me_apasiona_compartir_conocimientos_y_aprender_de_los_dem_s_a_trav_s_del_intercambio_de_habilidades">Soy María, especialista en marketing digital con más de 5 años de experiencia en el sector. Me apasiona compartir conocimientos y aprender de los demás a través del intercambio de habilidades.</string>
+    <string name="tecnolog_a_n_marketing_digital_n_programaci_n_n_dise_o_n_emprendimiento" translatable="false">• Tecnología\n• Marketing Digital\n• Programación\n• Diseño\n• Emprendimiento</string>
+    <string name="soy_mar_a_especialista_en_marketing_digital_con_m_s_de_5_a_os_de_experiencia_en_el_sector_me_apasiona_compartir_conocimientos_y_aprender_de_los_dem_s_a_trav_s_del_intercambio_de_habilidades" translatable="false">Soy María, especialista en marketing digital con más de 5 años de experiencia en el sector. Me apasiona compartir conocimientos y aprender de los demás a través del intercambio de habilidades.</string>
     <string name="sobre_mg">Sobre Mí</string>
-    <string name="excelente_experiencia_intercambiando_conocimientos_de_marketing_digital_por_programaci_n_mar_a_es_muy_paciente_y_explica_muy_bien_los_conceptos">Excelente experiencia intercambiando conocimientos de marketing digital por programación. María es muy paciente y explica muy bien los conceptos.</string>
+    <string name="excelente_experiencia_intercambiando_conocimientos_de_marketing_digital_por_programaci_n_mar_a_es_muy_paciente_y_explica_muy_bien_los_conceptos" translatable="false">Excelente experiencia intercambiando conocimientos de marketing digital por programación. María es muy paciente y explica muy bien los conceptos.</string>
     <string name="intereses">Intereses:</string>
-    <string name="kk">★★★★★</string>
-    <string name="hace_1_semana">Hace 1 semana</string>
-    <string name="carlos_mendoza">Carlos Mendoza</string>
-    <string name="gesti_n_de_proyectos">• Gestión de Proyectos</string>
-    <string name="dise_o_gr_fico">• Diseño Gráfico</string>
-    <string name="programaci_n">• Programación</string>
-    <string name="marketing_digital">• Marketing Digital</string>
-    <string name="tel_fono_verificado">• Teléfono verificado</string>
-    <string name="noso">Madrid, España</string>
-    <string name="mar_a_gonz_lezu">María González</string>
-    <string name="m">Foto de perfil de María González</string>
+    <string name="kk" translatable="false">★★★★★</string>
+    <string name="hace_1_semana" translatable="false">Hace 1 semana</string>
+    <string name="carlos_mendoza" translatable="false">Carlos Mendoza</string>
+    <string name="gesti_n_de_proyectos" translatable="false">• Gestión de Proyectos</string>
+    <string name="dise_o_gr_fico" translatable="false">• Diseño Gráfico</string>
+    <string name="programaci_n" translatable="false">• Programación</string>
+    <string name="marketing_digital" translatable="false">• Marketing Digital</string>
+    <string name="tel_fono_verificado" translatable="false">• Teléfono verificado</string>
+    <string name="noso" translatable="false">Madrid, España</string>
+    <string name="mar_a_gonz_lezu" translatable="false">María González</string>
+    <string name="m" translatable="false">Foto de perfil de María González</string>
     <string name="solicitar_intercambioH">Solicitar Intercambio</string>
     <string name="sobre_mi">Sobre Mí</string>
-    <string name="email_verificado1">• Email verificado</string>
+    <string name="email_verificado1" translatable="false">• Email verificado</string>
 
 </resources>
