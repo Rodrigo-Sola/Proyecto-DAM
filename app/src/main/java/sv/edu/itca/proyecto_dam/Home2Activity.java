@@ -60,6 +60,15 @@ public class Home2Activity extends AppCompatActivity {
         loadUsuarios();
         loadReuniones();
 
+        // Configurar click en "Ver todas" para ir a la búsqueda
+        TextView tvVerTodas = findViewById(R.id.tvVerTodas);
+        if (tvVerTodas != null) {
+            tvVerTodas.setOnClickListener(v -> {
+                Intent intent = new Intent(Home2Activity.this, principal.class);
+                startActivity(intent);
+            });
+        }
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav);
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
@@ -1004,8 +1013,13 @@ public class Home2Activity extends AppCompatActivity {
 
             int reunionId = reunion.optInt("id", -1);
 
+            // Obtener IDs de los usuarios
+            int idUsuario1 = usuario1 != null ? usuario1.optInt("id", -1) : -1;
+            int idUsuario2 = usuario2 != null ? usuario2.optInt("id", -1) : -1;
+            int idOtroUsuario = (idUsuario1 == currentUserId) ? idUsuario2 : idUsuario1;
+
             btnCompletar.setOnClickListener(v -> {
-                mostrarDialogoConfirmacion(reunionId, nombreOtroUsuario);
+                mostrarDialogoConfirmacion(reunionId, nombreOtroUsuario, idOtroUsuario);
             });
 
             // Agregar el botón al card principal
@@ -1060,7 +1074,7 @@ public class Home2Activity extends AppCompatActivity {
         }
     }
 
-    private void mostrarDialogoConfirmacion(int reunionId, String nombreUsuario) {
+    private void mostrarDialogoConfirmacion(int reunionId, String nombreUsuario, int otroUsuarioId) {
         new AlertDialog.Builder(this)
             .setTitle("Confirmar acción")
             .setMessage("¿Estás seguro de que deseas marcar la reunión con " + nombreUsuario + " como completada?")
@@ -1068,10 +1082,30 @@ public class Home2Activity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     // Actualizar estado de la reunión a completada
                     actualizarEstadoReunion(reunionId, 3); // 3 = Completada
+
+                    // Mostrar diálogo para dejar reseña
+                    mostrarDialogoResena(reunionId, otroUsuarioId, nombreUsuario);
                 }
             })
             .setNegativeButton("No", null)
             .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
+    }
+
+    private void mostrarDialogoResena(int reunionId, int otroUsuarioId, String nombreUsuario) {
+        new AlertDialog.Builder(this)
+            .setTitle("Dejar Reseña")
+            .setMessage("¿Te gustaría dejar una reseña sobre tu experiencia con " + nombreUsuario + "?")
+            .setPositiveButton("Sí", (dialog, which) -> {
+                // Abrir activity de reseña
+                Intent intent = new Intent(Home2Activity.this, DejarResenaActivity.class);
+                intent.putExtra("receptorUserId", otroUsuarioId);
+                intent.putExtra("receptorUserName", nombreUsuario);
+                intent.putExtra("reunionId", reunionId);
+                startActivity(intent);
+            })
+            .setNegativeButton("Ahora no", null)
+            .setIcon(android.R.drawable.ic_dialog_info)
             .show();
     }
 
