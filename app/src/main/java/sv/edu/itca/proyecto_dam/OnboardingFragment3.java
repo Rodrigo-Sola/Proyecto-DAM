@@ -1,6 +1,7 @@
 package sv.edu.itca.proyecto_dam;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Fragment para la tercera pantalla del onboarding
@@ -35,6 +38,10 @@ public class OnboardingFragment3 extends Fragment {
         // Configurar botón Comenzar
         Button btnInit = view.findViewById(R.id.btnInit);
         btnInit.setOnClickListener(v -> {
+            // Marcar el onboarding como completado
+            SharedPreferences prefs = requireActivity().getSharedPreferences("AppPreferences", MODE_PRIVATE);
+            prefs.edit().putBoolean("onboarding_completed", true).apply();
+
             // Redirigir a MainActivity
             Intent intent = new Intent(requireActivity(), MainActivity.class);
             startActivity(intent);

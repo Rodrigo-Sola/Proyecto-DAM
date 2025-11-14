@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Proyecto-DAM</string>
+    <string name="app_name">Skill Zone</string>
     <string name="Onboarding1_title">Comparte lo que sabes</string>
     <string name="Onboarding_title2">Encuentra tu match perfecto</string>
     <string name="Onboarding_title3">únete a la comunidad</string>
@@ -134,5 +134,6 @@
     <string name="solicitar_intercambioH">Solicitar Intercambio</string>
     <string name="sobre_mi">Sobre Mí</string>
     <string name="email_verificado1" translatable="false">• Email verificado</string>
+    <string name="skill_zone">Skill Zone</string>
 
 </resources>
