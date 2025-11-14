@@ -362,6 +362,7 @@ public class Home2Activity extends AppCompatActivity {
         LinearLayout.LayoutParams btnConectarParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             (int) (48 * getResources().getDisplayMetrics().density)
+
         );
         btnConectarParams.bottomMargin = (int) (8 * getResources().getDisplayMetrics().density);
         btnConectar.setLayoutParams(btnConectarParams);
@@ -372,8 +373,19 @@ public class Home2Activity extends AppCompatActivity {
         btnConectar.setTypeface(null, android.graphics.Typeface.BOLD);
         btnConectar.setAllCaps(false);
         btnConectar.setOnClickListener(v -> {
-            // TODO: Iniciar proceso de conexión
-            Log.d(TAG, "Conectar con usuario ID: " + usuario.optInt("id", -1));
+            // Abrir AgendarReunionActivity para solicitar reunión
+            int otroUsuarioId = usuario.optInt("id", -1);
+            String otroUsuarioNombre = usuario.optString("nombre", "Usuario");
+
+            if (otroUsuarioId != -1) {
+                Intent intent = new Intent(Home2Activity.this, AgendarReunionActivity.class);
+                intent.putExtra("userId", otroUsuarioId);
+                intent.putExtra("userName", otroUsuarioNombre);
+                startActivity(intent);
+                Log.d(TAG, "Abriendo AgendarReunionActivity para usuario: " + otroUsuarioNombre);
+            } else {
+                Toast.makeText(Home2Activity.this, "Error: Usuario no válido", Toast.LENGTH_SHORT).show();
+            }
         });
 
         // Botón secundario "Ver Perfil" con bordes redondeados

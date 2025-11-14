@@ -10,16 +10,16 @@
     android:padding="20dp"
     tools:context=".principal">
 
-
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:queryHint="Buscar..."
+        android:queryHint="Buscar por nombre o habilidad..."
         android:iconifiedByDefault="false"
+        android:background="@color/white"
+        android:layout_marginBottom="16dp"
+        app:queryBackground="@android:color/transparent"
         android:padding="8dp"/>
-
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,265 +27,19 @@
         android:layout_weight="1">
 
         <LinearLayout
+            android:id="@+id/usuariosContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
+            android:paddingHorizontal="8dp"
             android:paddingVertical="8dp">
 
-            <!-- First Card - Clases de Guitarra Española -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+            <!-- Las cards de usuarios se agregarán aquí dinámicamente -->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:layout_marginBottom="12dp"
-                        android:text="Música"
-                        android:textSize="11sp"
-                        app:chipBackgroundColor="#E8D7CE"
-                        app:chipStrokeColor="@android:color/transparent" />
-
-                    <!-- Profile section -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/profile_photo_background"
-                            android:contentDescription="@string/profile_pic"
-                            android:scaleType="centerCrop" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:text="Clases de Guitarra Española"
-                                android:textColor="#000000"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Carlos Mendoza"
-                                android:textColor="#000000"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:maxLines="2"
-                                android:text="Enseño guitarra española clásica y flamenca. Más de 10 años de expe..."
-                                android:textColor="#666666"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Distance and level -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:contentDescription="@string/distance"
-                            android:src="@android:drawable/ic_dialog_map"
-                            app:tint="#999999" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="2.5 km"
-                            android:textColor="#666666"
-                            android:textSize="12sp" />
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="8dp"
-                            android:text="Intermedio"
-                            android:textSize="11sp"
-                            app:chipBackgroundColor="#E8D7CE"
-                            app:chipStrokeColor="@android:color/transparent"
-                            tools:ignore="TouchTargetSizeCheck" />
-                    </LinearLayout>
-
-                    <!-- Contact button -->
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:paddingHorizontal="16dp"
-                        android:text="Contactar"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        app:backgroundTint="#C08968" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Second Card - Busco Profesor de Programación Python -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Busco Profesor de Programación Python"
-                        android:textColor="#000000"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <com.google.android.material.chip.Chip
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:layout_marginBottom="12dp"
-                        android:text="Tecnología"
-                        android:textSize="11sp"
-                        app:chipBackgroundColor="#E8D7CE"
-                        app:chipStrokeColor="@android:color/transparent" />
-
-                    <!-- Profile section -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/profile_photo_background"
-                            android:contentDescription="@string/profile_pic"
-                            android:scaleType="centerCrop" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="María González"
-                                android:textColor="#000000"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:maxLines="2"
-                                android:text="Necesito ayuda para aprender Python desde cero. Especialmen..."
-                                android:textColor="#666666"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Distance and level -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:contentDescription="@string/distance"
-                            android:src="@android:drawable/ic_dialog_map"
-                            app:tint="#999999" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="1.2 km"
-                            android:textColor="#666666"
-                            android:textSize="12sp" />
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="28dp"
-                            android:layout_marginStart="8dp"
-                            android:text="Principiante"
-                            android:textSize="11sp"
-                            app:chipBackgroundColor="#E8D7CE"
-                            app:chipStrokeColor="@android:color/transparent"
-                            tools:ignore="TouchTargetSizeCheck" />
-                    </LinearLayout>
-
-                    <!-- Contact button -->
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:paddingHorizontal="16dp"
-                        android:text="contactar"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        app:backgroundTint="#E6C68F"
-                        tools:ignore="TouchTargetSizeCheck" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/aggHabilidad"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="16dp"
-                android:padding="20dp"
-                android:src="@android:drawable/ic_input_add"
-                app:backgroundTint="#C08968"
-                tools:ignore="SpeakableTextPresentCheck" />
         </LinearLayout>
+
     </ScrollView>
 
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
@@ -297,3 +51,4 @@
         app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>
+
