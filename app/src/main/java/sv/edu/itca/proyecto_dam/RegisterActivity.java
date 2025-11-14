@@ -1,7 +1,9 @@
 package sv.edu.itca.proyecto_dam;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +19,9 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -49,6 +53,20 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView ivCameraIcon, ivProfilePhoto;
 
     private Uri selectedImageUri;
+
+    // Launcher para solicitar permisos
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    // Permiso concedido, abrir galería
+                    openGallery();
+                } else {
+                    // Permiso denegado, mostrar mensaje
+                    showPermissionDeniedDialog();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +102,10 @@ public class RegisterActivity extends AppCompatActivity {
     private void setupClickListeners() {
         btnRegister.setOnClickListener(v -> registerUser());
         tvSignInLink.setOnClickListener(v -> navigateToLogin());
-        ivCameraIcon.setOnClickListener(v -> openGallery());
+        ivCameraIcon.setOnClickListener(v -> checkPermissionsAndOpenGallery());
+
+        // También permitir click en el FrameLayout completo
+        findViewById(R.id.flProfilePhoto).setOnClickListener(v -> checkPermissionsAndOpenGallery());
     }
 
     /**
@@ -250,14 +271,13 @@ public class RegisterActivity extends AppCompatActivity {
                 builder.addFormDataPart("biografia", biography != null && !biography.isEmpty() ? biography : "");
 
                 if (profileImageUri != null) {
-                    File file = new File(getCacheDir(), "profile_image.jpg");
-                    try (InputStream inputStream = getContentResolver().openInputStream(profileImageUri);
-                         OutputStream os = new FileOutputStream(file)) {
-                        if (inputStream != null) {
-                            inputStream.transferTo(os);
-                        }
+                    // Comprimir la imagen antes de enviarla
+                    File compressedFile = compressImage(profileImageUri);
+                    if (compressedFile != null) {
+                        builder.addFormDataPart("fotoPerfil", compressedFile.getName(),
+                            RequestBody.create(MediaType.parse("image/jpeg"), compressedFile));
+                        android.util.Log.d("RegisterActivity", "Imagen comprimida. Tamaño: " + compressedFile.length() + " bytes");
                     }
-                    builder.addFormDataPart("fotoPerfil", file.getName(), RequestBody.create(MediaType.parse("image/jpeg"), file));
                 }
 
                 RequestBody requestBody = builder.build();
@@ -346,9 +366,114 @@ public class RegisterActivity extends AppCompatActivity {
             }
     );
 
+    /**
+     * Verifica permisos y abre la galería
+     */
+    private void checkPermissionsAndOpenGallery() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ usa READ_MEDIA_IMAGES
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+                    == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            } else {
+                // Solicitar permiso
+                requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
+            }
+        } else {
+            // Android 12 y anteriores usan READ_EXTERNAL_STORAGE
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            } else {
+                // Solicitar permiso
+                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+        }
+    }
+
+    /**
+     * Muestra un diálogo cuando el permiso es denegado
+     */
+    private void showPermissionDeniedDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Permiso necesario")
+                .setMessage("Para seleccionar una foto de perfil, necesitamos acceso a tus imágenes. " +
+                        "Por favor, concede el permiso en la configuración de la aplicación.")
+                .setPositiveButton("Configuración", (dialog, which) -> {
+                    // Abrir configuración de la app
+                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         galleryLauncher.launch(intent);
+    }
+
+    /**
+     * Comprime la imagen a un tamaño manejable (máximo 1MB)
+     */
+    private File compressImage(Uri imageUri) {
+        try {
+            // Cargar la imagen original
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            android.graphics.Bitmap originalBitmap = android.graphics.BitmapFactory.decodeStream(inputStream);
+            if (inputStream != null) {
+                inputStream.close();
+            }
+
+            if (originalBitmap == null) {
+                android.util.Log.e("RegisterActivity", "No se pudo decodificar la imagen");
+                return null;
+            }
+
+            // Calcular el tamaño máximo (800x800 para fotos de perfil)
+            int maxWidth = 800;
+            int maxHeight = 800;
+
+            float scale = Math.min(
+                (float) maxWidth / originalBitmap.getWidth(),
+                (float) maxHeight / originalBitmap.getHeight()
+            );
+
+            // Redimensionar solo si es necesario
+            android.graphics.Bitmap resizedBitmap;
+            if (scale < 1.0f) {
+                int newWidth = Math.round(originalBitmap.getWidth() * scale);
+                int newHeight = Math.round(originalBitmap.getHeight() * scale);
+                resizedBitmap = android.graphics.Bitmap.createScaledBitmap(
+                    originalBitmap, newWidth, newHeight, true
+                );
+                originalBitmap.recycle();
+            } else {
+                resizedBitmap = originalBitmap;
+            }
+
+            // Guardar la imagen comprimida
+            File compressedFile = new File(getCacheDir(), "profile_image_compressed.jpg");
+            FileOutputStream outputStream = new FileOutputStream(compressedFile);
+
+            // Comprimir con calidad 80 (balance entre calidad y tamaño)
+            resizedBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 80, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            resizedBitmap.recycle();
+
+            android.util.Log.d("RegisterActivity", "Imagen comprimida exitosamente. Tamaño final: " +
+                compressedFile.length() + " bytes (" + (compressedFile.length() / 1024) + " KB)");
+
+            return compressedFile;
+
+        } catch (Exception e) {
+            android.util.Log.e("RegisterActivity", "Error comprimiendo imagen: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 }
