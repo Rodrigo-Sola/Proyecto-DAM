@@ -392,17 +392,17 @@ public class perfil extends AppCompatActivity {
     }
 
     private void setupFAB() {
-        // Buscar el contenedor raíz del layout (ScrollView -> LinearLayout)
+        // Crear FAB dinámicamente ya que no existe en el XML de activity_perfil
+        Log.d(TAG, "Creando FAB de agregar habilidades dinámicamente");
+
+        // Buscar el contenedor raíz
         View rootView = findViewById(android.R.id.content);
 
-        if (rootView != null) {
-            // Crear FAB para agregar habilidades
+        if (rootView instanceof FrameLayout) {
             FloatingActionButton fab = new FloatingActionButton(this);
-            fab.setId(R.id.aggHabilidad);
             fab.setImageResource(android.R.drawable.ic_input_add);
-            fab.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_orange_light, null));
+            fab.setBackgroundTintList(getResources().getColorStateList(R.color.secundario, null));
 
-            // Crear FrameLayout.LayoutParams para posicionar el FAB
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                     (int) (56 * getResources().getDisplayMetrics().density),
                     (int) (56 * getResources().getDisplayMetrics().density)
@@ -412,25 +412,19 @@ public class perfil extends AppCompatActivity {
                     (int) (16 * getResources().getDisplayMetrics().density),
                     (int) (16 * getResources().getDisplayMetrics().density),
                     (int) (16 * getResources().getDisplayMetrics().density),
-                    (int) (80 * getResources().getDisplayMetrics().density) // Más margen para el bottom nav
+                    (int) (80 * getResources().getDisplayMetrics().density) // Espacio para bottom nav
             );
             fab.setLayoutParams(params);
 
             fab.setOnClickListener(v -> {
-                // Navegar a la activity de agregar habilidades
                 Intent intent = new Intent(perfil.this, form.class);
                 startActivity(intent);
             });
 
-            // Agregar el FAB al contenedor raíz
-            if (rootView instanceof FrameLayout) {
-                ((FrameLayout) rootView).addView(fab);
-                Log.d(TAG, "FAB de agregar habilidades agregado dinámicamente");
-            } else {
-                Log.w(TAG, "Root view no es FrameLayout, no se pudo agregar FAB");
-            }
+            ((FrameLayout) rootView).addView(fab);
+            Log.d(TAG, "FAB agregado dinámicamente exitosamente");
         } else {
-            Log.w(TAG, "No se pudo encontrar el root view para agregar el FAB");
+            Log.w(TAG, "No se pudo agregar FAB: rootView no es FrameLayout");
         }
     }
 
