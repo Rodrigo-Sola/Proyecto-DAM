@@ -7,320 +7,72 @@
     android:layout_height="match_parent"
     android:background="@color/fondo_principal"
     android:orientation="vertical"
-    android:padding="20dp"
+    android:padding="16dp"
     tools:context=".Home2Activity">
 
-    <TextView
-        android:id="@+id/Userinfo"
+    <!-- Header con icono de perfil y nombre -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:layout_marginBottom="8dp"
-        android:text=""
-        android:textColor="@color/texto_oscuro"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_marginHorizontal="12dp">
 
+        <ImageView
+            android:id="@+id/imgPerfilHeader"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/circular_image"
+            android:clipToOutline="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile_placeholder"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="4dp" />
+
+        <TextView
+            android:id="@+id/Userinfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text=""
+            android:textColor="@color/texto_oscuro"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center" />
+    </LinearLayout>
 
     <!-- Título Nuevas Coincidencias -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:text="Nuevas Coincidencias"
         android:textColor="@color/texto_oscuro"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:gravity="center_horizontal" />
 
     <!-- Scroll horizontal para las coincidencias -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginHorizontal="4dp"
         android:scrollbars="none">
 
         <LinearLayout
+            android:id="@+id/usuariosContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!-- Primera tarjeta de coincidencia -->
-            <LinearLayout
-                android:layout_width="280dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:background="@color/terciario"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Imagen de perfil -->
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@drawable/profile_photo_background" />
-
-                    <!-- Información del perfil -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/nombreUsuario1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Carlos Rodríguez"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="4.8"
-                                android:textColor="@color/texto_oscuro"
-                                android:textSize="12sp" />
-
-                            <!-- Aquí podrías agregar un RatingBar para las estrellas -->
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="Enseña:"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Fluiter\nReact Native\nUI/UX"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Botones -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:layout_width="0dp"
-                        android:layout_height="32dp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/primario"
-                        android:text="Ver Perfil"
-                        android:textColor="@color/fondo_principal"
-                        android:textSize="12sp" />
-
-                    <Button
-                        android:layout_width="0dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/secundario"
-                        android:text="Conectar"
-                        android:textColor="@color/texto_oscuro"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Segunda tarjeta de coincidencia -->
-            <LinearLayout
-                android:layout_width="280dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:background="@color/terciario"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Imagen de perfil -->
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@drawable/profile_photo_background" />
-
-                    <!-- Información del perfil -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/nombreUsuario2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Ana Martínez"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="Enseña:"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Inglés"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Botones -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:layout_width="0dp"
-                        android:layout_height="32dp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/primario"
-                        android:text="Ver Perfil"
-                        android:textColor="@color/fondo_principal"
-                        android:textSize="12sp" />
-
-                    <Button
-                        android:layout_width="0dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/secundario"
-                        android:text="Conectar"
-                        android:textColor="@color/texto_oscuro"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Tercera tarjeta de coincidencia (adicional para el scroll) -->
-            <LinearLayout
-                android:layout_width="280dp"
-                android:layout_height="wrap_content"
-                android:background="@color/terciario"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Imagen de perfil -->
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginEnd="12dp"
-                        android:background="@drawable/profile_photo_background" />
-
-                    <!-- Información del perfil -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/nombreUsuario3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="María López"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="4.9"
-                                android:textColor="@color/texto_oscuro"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="Enseña:"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Guitarra\nPiano"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Botones -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:layout_width="0dp"
-                        android:layout_height="32dp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/primario"
-                        android:text="Ver Perfil"
-                        android:textColor="@color/fondo_principal"
-                        android:textSize="12sp" />
-
-                    <Button
-                        android:layout_width="0dp"
-                        android:layout_height="32dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/secundario"
-                        android:text="Conectar"
-                        android:textColor="@color/texto_oscuro"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>
-
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp">
+            <!-- Las cards de usuarios se cargarán dinámicamente -->
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -328,7 +80,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginHorizontal="8dp"
         android:gravity="end"
         android:text="Ver todas"
         android:textColor="@color/primario"
@@ -339,137 +92,204 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:text="Sesiones Pendientes"
         android:textColor="@color/texto_oscuro"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:gravity="center_horizontal" />
 
-    <!-- Tarjeta de sesión 1 -->
-
-    <!-- Tarjeta de sesión 2 -->
-
+    <!-- Contenedor con scroll para sesiones -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_marginHorizontal="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="8dp"
+            android:layout_marginHorizontal="4dp">
 
             <!-- Primera sesión -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:background="@color/terciario"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_marginHorizontal="8dp"
+                android:background="@drawable/session_card_background"
+                android:elevation="6dp"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
 
+                <!-- Icono de la sesión -->
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/school"
+                    android:scaleType="centerInside" />
+
+                <!-- Contenido de la sesión -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Programación en Flutter"
+                        android:textColor="@color/texto_oscuro"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="con Carlos Rodríguez"
+                        android:textColor="@color/texto_oscuro"
+                        android:textSize="14sp" />
+
+                    <!-- Layout para fecha/hora con icono -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="6dp"
+                            android:src="@drawable/clock"
+                            android:scaleType="centerInside" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="21:35 - 14/11/2025"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Estado de la sesión -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Programación en Flu..."
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="con Carlos Rodríguez"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="22:22 - 12/11/2025"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:text="Confirmada"
                     android:textColor="@color/primario"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:background="@drawable/skill_chip_background"
+                    android:backgroundTint="@color/secundario"
+                    android:padding="8dp" />
+
             </LinearLayout>
 
             <!-- Segunda sesión -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:background="@color/terciario"
-                android:elevation="4dp"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_marginBottom="16dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="@drawable/session_card_background"
+                android:elevation="6dp"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
 
+                <!-- Icono de la sesión -->
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/school"
+                    android:scaleType="centerInside" />
+
+                <!-- Contenido de la sesión -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Conversación en Inglés"
+                        android:textColor="@color/texto_oscuro"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="con Ana Martínez"
+                        android:textColor="@color/texto_oscuro"
+                        android:textSize="14sp" />
+
+                    <!-- Layout para fecha/hora con icono -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="6dp"
+                            android:src="@drawable/clock"
+                            android:scaleType="centerInside" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="00:22 - 14/11/2025"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Estado de la sesión -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Conversación en Inglés"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="con Ana Martínez"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="00:22 - 14/11/2025"
-                    android:textColor="@color/texto_oscuro"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:text="Pendiente"
-                    android:textColor="@color/secundario"
+                    android:textColor="@color/primario"
                     android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:background="@drawable/skill_chip_background"
+                    android:backgroundTint="#FFECB3"
+                    android:padding="8dp" />
+
             </LinearLayout>
 
-            <!-- Puedes agregar más sesiones aquí si necesitas -->
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/aggHabilidad"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="16dp"
-                android:src="@android:drawable/ic_input_add"
-                app:backgroundTint="#C08968"
-                tools:ignore="SpeakableTextPresentCheck" />
-
         </LinearLayout>
-
 
     </ScrollView>
 
 
+    <!-- Bottom Navigation con margen -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="#FFFFFF"
+        android:layout_height="70dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginHorizontal="2dp"
+        android:background="@color/white"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
 

@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/hogar"
-        android:title="Home" />
+        android:title="Home"
+        app:itemIconSize="28dp" />
 
     <item
         android:id="@+id/nav_search"
         android:icon="@drawable/busqueda"
-        android:title="Search" />
+        android:title="Search"
+        app:itemIconSize="28dp" />
 
     <item
         android:id="@+id/nav_noti"
         android:icon="@drawable/noti"
-        android:title="Notificaciones" />
+        android:title="Notificaciones"
+        app:itemIconSize="28dp" />
 
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/usuario"
-        android:title="Profile" />
+        android:title="Profile"
+        app:itemIconSize="28dp" />
 </menu>

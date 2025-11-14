@@ -1,6 +1,7 @@
 package sv.edu.itca.proyecto_dam;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -10,12 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Pantalla principal después del login exitoso
- * Muestra información del usuario y permite gestionar la verificación de correo
+ * Muestra información del usuario usando API REST
  */
 public class HomeActivity extends AppCompatActivity {
 
@@ -24,16 +23,12 @@ public class HomeActivity extends AppCompatActivity {
     private MaterialCardView cardVerification;
     private MaterialButton btnResendVerification, btnRefreshUser, btnLogout;
 
-    // Firebase Authentication
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        initializeFirebase();
         initializeViews();
         setupClickListeners();
         loadUserInformation();
@@ -43,16 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Actualizar información del usuario cuando la actividad regresa al foco
-        refreshUserInfo();
-
-    }
-
-    /**
-     * Inicializa Firebase Authentication
-     */
-    private void initializeFirebase() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        currentUser = firebaseAuth.getCurrentUser();
+        updateUserUI();
     }
 
     /**
@@ -72,9 +58,15 @@ public class HomeActivity extends AppCompatActivity {
      * Configura los listeners de los elementos clickeables
      */
     private void setupClickListeners() {
-        btnResendVerification.setOnClickListener(v -> resendVerificationEmail());
-        btnRefreshUser.setOnClickListener(v -> openFormActivity());
-        btnLogout.setOnClickListener(v -> logout());
+        if (btnResendVerification != null) {
+            btnResendVerification.setVisibility(View.GONE);
+        }
+        if (btnRefreshUser != null) {
+            btnRefreshUser.setOnClickListener(v -> openFormActivity());
+        }
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> logout());
+        }
     }
 
     private void openFormActivity() {
@@ -87,81 +79,45 @@ public class HomeActivity extends AppCompatActivity {
      * Carga la información inicial del usuario
      */
     private void loadUserInformation() {
-        if (currentUser != null) {
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        int userId = prefs.getInt("userId", -1);
+
+        if (userId != -1) {
+            // Usuario logueado, redirigir a Home2Activity
             Intent intent = new Intent(this, Home2Activity.class);
             startActivity(intent);
             finish();
-            // Usuario Logueado
-
-            updateUserUI();
         } else {
             // Si no hay usuario logueado, redirigir al login
             navigateToLogin();
         }
     }
 
-    /**
-     * Actualiza la información del usuario desde Firebase
-     */
-    private void refreshUserInfo() {
-        if (currentUser != null) {
-            currentUser.reload().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    currentUser = firebaseAuth.getCurrentUser();
-                    updateUserUI();
-                    showToast("Información actualizada");
-                } else {
-                    showToast("Error al actualizar información");
-                }
-            });
-        }
-    }
 
     /**
      * Actualiza la interfaz de usuario con la información del usuario
      */
     private void updateUserUI() {
-        if (currentUser != null) {
-            // Mostrar email del usuario
-            tvUserEmail.setText(currentUser.getEmail());
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        String userEmail = prefs.getString("userEmail", "");
+        String userName = prefs.getString("userName", "Usuario");
 
-            // Mostrar nombre del usuario
-            String displayName = currentUser.getDisplayName();
-            tvUserName.setText("Nombre: " + (displayName != null ? displayName : "No especificado"));
-
-            // Verificar estado de verificación del email
-            boolean isEmailVerified = currentUser.isEmailVerified();
-            if (isEmailVerified) {
-                tvEmailVerification.setText("Estado: Email verificado ✓");
-                tvEmailVerification.setTextColor(getColor(android.R.color.holo_green_dark));
-                cardVerification.setVisibility(View.GONE);
-            } else {
-                tvEmailVerification.setText("Estado: Email no verificado ⚠");
-                tvEmailVerification.setTextColor(getColor(android.R.color.holo_orange_dark));
-                cardVerification.setVisibility(View.VISIBLE);
-            }
+        // Mostrar email del usuario
+        if (tvUserEmail != null) {
+            tvUserEmail.setText(userEmail);
         }
-    }
 
-    /**
-     * Reenvía el correo de verificación
-     */
-    private void resendVerificationEmail() {
-        if (currentUser != null) {
-            btnResendVerification.setEnabled(false);
-            btnResendVerification.setText("Enviando...");
+        // Mostrar nombre del usuario
+        if (tvUserName != null) {
+            tvUserName.setText("Nombre: " + userName);
+        }
 
-            currentUser.sendEmailVerification()
-                    .addOnCompleteListener(task -> {
-                        btnResendVerification.setEnabled(true);
-                        btnResendVerification.setText(getString(R.string.resend_verification));
-
-                        if (task.isSuccessful()) {
-                            showToast(getString(R.string.verification_email_sent));
-                        } else {
-                            showToast("Error al enviar el correo de verificación");
-                        }
-                    });
+        // Ocultar verificación de email ya que no usamos Firebase
+        if (tvEmailVerification != null) {
+            tvEmailVerification.setVisibility(View.GONE);
+        }
+        if (cardVerification != null) {
+            cardVerification.setVisibility(View.GONE);
         }
     }
 
@@ -169,7 +125,10 @@ public class HomeActivity extends AppCompatActivity {
      * Cierra la sesión del usuario
      */
     private void logout() {
-        firebaseAuth.signOut();
+        // Limpiar SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
+        prefs.edit().clear().apply();
+
         navigateToLogin();
     }
 

@@ -11,8 +11,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.annotation.NonNull;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class principal extends AppCompatActivity {
 
