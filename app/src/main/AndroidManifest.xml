@@ -19,6 +19,9 @@
         <activity
             android:name=".ReunionesActivity"
             android:exported="false" />
+        <activity
+            android:name=".AgendarReunionActivity"
+            android:exported="false" />
         <!-- SplashScreen como activity de inicio -->
         <activity
             android:name=".perfil"
