@@ -5,19 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fondo_principal"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:paddingTop="32dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="16dp">
 
         <!-- Header Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="24dp">
+            android:paddingBottom="24dp"
+            android:layout_marginTop="16dp">
 
             <ImageView
                 android:id="@+id/imgPerfil"
@@ -60,42 +63,6 @@
         </LinearLayout>
 
         <!-- Verificaciones Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@color/terciario"
-            android:elevation="2dp"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Verificaciones"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/email_verificado1"
-                android:textColor="@color/texto_oscuro" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="• Teléfono verificado"
-                android:textColor="@color/texto_oscuro" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="• Identidad verificada"
-                android:textColor="@color/texto_oscuro" />
-        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
@@ -147,101 +114,71 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Fila 1 -->
+                <!-- Fila 1 de chips -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="8dp"
+                    android:gravity="start">
 
-                    <!-- Chip Diseño UI/UX -->
-                    <LinearLayout
+                    <!-- Chip 1: Diseño UI/UX -->
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:background="@color/terciario"
-                        android:paddingVertical="8dp"
-                        android:paddingHorizontal="12dp"
+                        android:text="Diseño UI/UX"
+                        android:textColor="@color/texto_oscuro"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/skill_chip_background"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
                         android:layout_marginEnd="8dp"
-                        android:gravity="center_vertical">
+                        android:gravity="center" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Diseño UI/UX"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" ×"
-                            android:textColor="@color/primario"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:layout_marginStart="4dp" />
-                    </LinearLayout>
-
-                    <!-- Chip Marketing Digital -->
-                    <LinearLayout
+                    <!-- Chip 2: Marketing Digital -->
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:background="@color/terciario"
-                        android:paddingVertical="8dp"
-                        android:paddingHorizontal="12dp"
-                        android:gravity="center_vertical">
+                        android:text="Marketing Digital"
+                        android:textColor="@color/texto_oscuro"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/skill_chip_background"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:layout_marginEnd="8dp"
+                        android:gravity="center" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Marketing Digital"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" ×"
-                            android:textColor="@color/primario"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:layout_marginStart="4dp" />
-                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Fila 2 -->
+                <!-- Fila 2 de chips -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="16dp"
+                    android:gravity="start">
 
-                    <LinearLayout
+                    <!-- Chip 3: Cocina Italiana -->
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:background="@color/terciario"
-                        android:paddingVertical="8dp"
-                        android:paddingHorizontal="12dp"
-                        android:gravity="center_vertical">
+                        android:text="Cocina Italiana"
+                        android:textColor="@color/texto_oscuro"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/skill_chip_background"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:gravity="center" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Cocina Italiana"
-                            android:textColor="@color/texto_oscuro"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" ×"
-                            android:textColor="@color/primario"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            android:layout_marginStart="4dp" />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <!-- Campo + botón -->
@@ -249,7 +186,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:layout_marginTop="8dp">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
