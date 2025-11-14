@@ -681,7 +681,7 @@ public class Home2Activity extends AppCompatActivity {
             if (reunionesArray.length() == 0) {
                 // Mostrar mensaje de no hay reuniones
                 TextView noReunionesTextView = new TextView(this);
-                noReunionesTextView.setText("No tienes sesiones pendientes");
+                noReunionesTextView.setText("No tienes sesiones confirmadas");
                 noReunionesTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
                 noReunionesTextView.setTextSize(14);
                 noReunionesTextView.setTypeface(null, android.graphics.Typeface.ITALIC);
@@ -700,16 +700,40 @@ public class Home2Activity extends AppCompatActivity {
             SharedPreferences prefs = getSharedPreferences("UserSession", MODE_PRIVATE);
             int currentUserId = prefs.getInt("userId", -1);
 
-            // Mostrar cada reunión
+            // Filtrar solo reuniones confirmadas (estado = 2)
+            int reunionesMostradas = 0;
             for (int i = 0; i < reunionesArray.length(); i++) {
                 JSONObject reunion = reunionesArray.getJSONObject(i);
+                JSONObject estado = reunion.optJSONObject("idEstadoR");
 
-                // Crear card para la reunión
-                LinearLayout reunionCard = createReunionCard(reunion, currentUserId);
-                reunionesContainer.addView(reunionCard);
+                // Solo mostrar si está confirmada (estado = 2)
+                if (estado != null && estado.optInt("id", 0) == 2) {
+                    // Crear card para la reunión
+                    LinearLayout reunionCard = createReunionCard(reunion, currentUserId);
+                    reunionesContainer.addView(reunionCard);
+                    reunionesMostradas++;
+                }
             }
 
-            Log.d(TAG, "Displayed " + reunionesArray.length() + " reuniones");
+            // Si no hay reuniones confirmadas, mostrar mensaje
+            if (reunionesMostradas == 0) {
+                TextView noReunionesTextView = new TextView(this);
+                noReunionesTextView.setText("No tienes sesiones confirmadas");
+                noReunionesTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
+                noReunionesTextView.setTextSize(14);
+                noReunionesTextView.setTypeface(null, android.graphics.Typeface.ITALIC);
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.topMargin = (int) (16 * getResources().getDisplayMetrics().density);
+                noReunionesTextView.setLayoutParams(params);
+
+                reunionesContainer.addView(noReunionesTextView);
+            }
+
+            Log.d(TAG, "Displayed " + reunionesMostradas + " reuniones confirmadas de " + reunionesArray.length() + " totales");
         } catch (Exception e) {
             Log.e(TAG, "Error displaying reuniones: " + e.getMessage());
             e.printStackTrace();
@@ -798,7 +822,7 @@ public class Home2Activity extends AppCompatActivity {
 
         // Título de la reunión
         TextView tituloTextView = new TextView(this);
-        tituloTextView.setText("Sesión de intercambio");
+        tituloTextView.setText("Sesión confirmada");
         tituloTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
         tituloTextView.setTextSize(16);
         tituloTextView.setTypeface(null, android.graphics.Typeface.BOLD);

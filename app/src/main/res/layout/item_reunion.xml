@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/terciario"
+    android:elevation="4dp"
+    android:layout_marginBottom="12dp"
+    android:padding="16dp">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTituloReunion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Solicitud de reunión"
+        android:textColor="@color/texto_oscuro"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Con quién -->
+    <TextView
+        android:id="@+id/tvConQuien"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="de Usuario"
+        android:textColor="@color/texto_oscuro"
+        android:textSize="14sp" />
+
+    <!-- Fecha y hora -->
+    <TextView
+        android:id="@+id/tvFechaReunion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Sin fecha programada"
+        android:textColor="@color/texto_oscuro"
+        android:textSize="12sp" />
+
+    <!-- Estado -->
+    <TextView
+        android:id="@+id/tvEstadoReunion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Pendiente"
+        android:textColor="@color/secundario"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <!-- Botones -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnRechazar"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="@string/rechazar"
+            android:textSize="12sp"
+            android:textColor="@color/fondo_principal"
+            android:backgroundTint="@android:color/holo_red_light" />
+
+        <Button
+            android:id="@+id/btnAceptar"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="@string/aceptar"
+            android:textSize="12sp"
+            android:textColor="@color/texto_oscuro"
+            android:backgroundTint="@color/primario" />
+
+    </LinearLayout>
+
+</LinearLayout>
+

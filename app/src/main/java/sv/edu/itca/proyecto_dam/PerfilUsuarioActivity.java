@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,8 +31,10 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
     private ImageView imgPerfil;
     private TextView tvNombre;
     private TextView tvUbicacion;
+    private Button btnSolicitarIntercambio;
 
     private int userId = -1;
+    private String userName = "";
     private String userBiografia = "";
     private JSONArray userOpiniones = new JSONArray();
 
@@ -65,6 +68,12 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
         imgPerfil = findViewById(R.id.imgPerfil);
         tvNombre = findViewById(R.id.tvNombre);
         tvUbicacion = findViewById(R.id.tvUbicacion);
+        btnSolicitarIntercambio = findViewById(R.id.btnSolicitarIntercambio);
+
+        // Configurar click listener del botón
+        btnSolicitarIntercambio.setOnClickListener(v -> {
+            abrirAgendarReunion();
+        });
     }
 
     private void loadUserData() {
@@ -91,7 +100,11 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
                             // Set user name with apellido
                             String nombre = userObj.optString("nombre", "");
                             String apellido = userObj.optString("apellido", "");
-                            tvNombre.setText(nombre + " " + apellido);
+                            String nombreCompleto = nombre + " " + apellido;
+                            tvNombre.setText(nombreCompleto);
+
+                            // Guardar nombre para usar al agendar reunión
+                            userName = nombreCompleto;
 
                             // Save biography for "Sobre mí" tab
                             userBiografia = userObj.optString("biografia", "");
@@ -505,5 +518,18 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
 
         return stars.toString();
     }
-}
 
+    private void abrirAgendarReunion() {
+        if (userName == null || userName.isEmpty()) {
+            Toast.makeText(this, "Espera a que carguen los datos del usuario", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Log.d(TAG, "Abriendo AgendarReunionActivity para usuario: " + userName + " (ID: " + userId + ")");
+
+        Intent intent = new Intent(this, AgendarReunionActivity.class);
+        intent.putExtra("userId", userId);
+        intent.putExtra("userName", userName);
+        startActivity(intent);
+    }
+}

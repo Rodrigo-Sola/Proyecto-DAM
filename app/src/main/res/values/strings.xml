@@ -99,6 +99,12 @@
 
     <!-- Google Sign-In -->
     <string name="default_web_client_id">304174422931-de9daiagarapld5at6b4hlt7t29qi9qa.apps.googleusercontent.com</string>
+
+    <!-- Reuniones strings -->
+    <string name="reuniones_pendientes">Reuniones Pendientes</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="rechazar">Rechazar</string>
+
     <string name="verificaciones">Verificaciones</string>
     <string name="email_verificado">• Email verificado</string>
     <string name="identidad_verificada">• Identidad verificada</string>
