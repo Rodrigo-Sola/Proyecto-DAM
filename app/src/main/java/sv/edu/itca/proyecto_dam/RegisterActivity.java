@@ -271,14 +271,13 @@ public class RegisterActivity extends AppCompatActivity {
                 builder.addFormDataPart("biografia", biography != null && !biography.isEmpty() ? biography : "");
 
                 if (profileImageUri != null) {
-                    File file = new File(getCacheDir(), "profile_image.jpg");
-                    try (InputStream inputStream = getContentResolver().openInputStream(profileImageUri);
-                         OutputStream os = new FileOutputStream(file)) {
-                        if (inputStream != null) {
-                            inputStream.transferTo(os);
-                        }
+                    // Comprimir la imagen antes de enviarla
+                    File compressedFile = compressImage(profileImageUri);
+                    if (compressedFile != null) {
+                        builder.addFormDataPart("fotoPerfil", compressedFile.getName(),
+                            RequestBody.create(MediaType.parse("image/jpeg"), compressedFile));
+                        android.util.Log.d("RegisterActivity", "Imagen comprimida. Tamaño: " + compressedFile.length() + " bytes");
                     }
-                    builder.addFormDataPart("fotoPerfil", file.getName(), RequestBody.create(MediaType.parse("image/jpeg"), file));
                 }
 
                 RequestBody requestBody = builder.build();
@@ -415,5 +414,66 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         galleryLauncher.launch(intent);
+    }
+
+    /**
+     * Comprime la imagen a un tamaño manejable (máximo 1MB)
+     */
+    private File compressImage(Uri imageUri) {
+        try {
+            // Cargar la imagen original
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            android.graphics.Bitmap originalBitmap = android.graphics.BitmapFactory.decodeStream(inputStream);
+            if (inputStream != null) {
+                inputStream.close();
+            }
+
+            if (originalBitmap == null) {
+                android.util.Log.e("RegisterActivity", "No se pudo decodificar la imagen");
+                return null;
+            }
+
+            // Calcular el tamaño máximo (800x800 para fotos de perfil)
+            int maxWidth = 800;
+            int maxHeight = 800;
+
+            float scale = Math.min(
+                (float) maxWidth / originalBitmap.getWidth(),
+                (float) maxHeight / originalBitmap.getHeight()
+            );
+
+            // Redimensionar solo si es necesario
+            android.graphics.Bitmap resizedBitmap;
+            if (scale < 1.0f) {
+                int newWidth = Math.round(originalBitmap.getWidth() * scale);
+                int newHeight = Math.round(originalBitmap.getHeight() * scale);
+                resizedBitmap = android.graphics.Bitmap.createScaledBitmap(
+                    originalBitmap, newWidth, newHeight, true
+                );
+                originalBitmap.recycle();
+            } else {
+                resizedBitmap = originalBitmap;
+            }
+
+            // Guardar la imagen comprimida
+            File compressedFile = new File(getCacheDir(), "profile_image_compressed.jpg");
+            FileOutputStream outputStream = new FileOutputStream(compressedFile);
+
+            // Comprimir con calidad 80 (balance entre calidad y tamaño)
+            resizedBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 80, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            resizedBitmap.recycle();
+
+            android.util.Log.d("RegisterActivity", "Imagen comprimida exitosamente. Tamaño final: " +
+                compressedFile.length() + " bytes (" + (compressedFile.length() / 1024) + " KB)");
+
+            return compressedFile;
+
+        } catch (Exception e) {
+            android.util.Log.e("RegisterActivity", "Error comprimiendo imagen: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 }
