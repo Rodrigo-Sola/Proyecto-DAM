@@ -1,7 +1,9 @@
 package sv.edu.itca.proyecto_dam;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +19,9 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -49,6 +53,20 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView ivCameraIcon, ivProfilePhoto;
 
     private Uri selectedImageUri;
+
+    // Launcher para solicitar permisos
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            isGranted -> {
+                if (isGranted) {
+                    // Permiso concedido, abrir galería
+                    openGallery();
+                } else {
+                    // Permiso denegado, mostrar mensaje
+                    showPermissionDeniedDialog();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +102,10 @@ public class RegisterActivity extends AppCompatActivity {
     private void setupClickListeners() {
         btnRegister.setOnClickListener(v -> registerUser());
         tvSignInLink.setOnClickListener(v -> navigateToLogin());
-        ivCameraIcon.setOnClickListener(v -> openGallery());
+        ivCameraIcon.setOnClickListener(v -> checkPermissionsAndOpenGallery());
+
+        // También permitir click en el FrameLayout completo
+        findViewById(R.id.flProfilePhoto).setOnClickListener(v -> checkPermissionsAndOpenGallery());
     }
 
     /**
@@ -345,6 +366,50 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
     );
+
+    /**
+     * Verifica permisos y abre la galería
+     */
+    private void checkPermissionsAndOpenGallery() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ usa READ_MEDIA_IMAGES
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+                    == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            } else {
+                // Solicitar permiso
+                requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
+            }
+        } else {
+            // Android 12 y anteriores usan READ_EXTERNAL_STORAGE
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            } else {
+                // Solicitar permiso
+                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+        }
+    }
+
+    /**
+     * Muestra un diálogo cuando el permiso es denegado
+     */
+    private void showPermissionDeniedDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Permiso necesario")
+                .setMessage("Para seleccionar una foto de perfil, necesitamos acceso a tus imágenes. " +
+                        "Por favor, concede el permiso en la configuración de la aplicación.")
+                .setPositiveButton("Configuración", (dialog, which) -> {
+                    // Abrir configuración de la app
+                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);

@@ -69,10 +69,8 @@
                 android:id="@+id/ivProfilePhoto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="8dp"
-                android:src="@android:drawable/ic_menu_myplaces"
-                app:tint="@color/primario"
-                android:scaleType="centerInside"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:scaleType="centerCrop"
                 android:contentDescription="@string/profile_photo_description" />
 
             <ImageView
