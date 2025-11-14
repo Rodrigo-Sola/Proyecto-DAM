@@ -262,43 +262,83 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
                 habilidadesContent.removeViewAt(i);
             }
 
-            // Agregar las habilidades del usuario
-            for (int i = 0; i < skillsArray.length(); i++) {
-                JSONObject skill = skillsArray.getJSONObject(i);
-                String nombreHabilidad = skill.optString("nomHabilidad", "");
-
-                if (!nombreHabilidad.isEmpty()) {
-                    TextView skillTextView = new TextView(this);
-                    skillTextView.setText(nombreHabilidad);
-                    skillTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
-                    skillTextView.setTextSize(16);
-
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    params.topMargin = (i == 0) ? 24 : 8;
-                    skillTextView.setLayoutParams(params);
-
-                    habilidadesContent.addView(skillTextView);
-                }
-            }
-
             // Si no hay habilidades, mostrar un mensaje
             if (skillsArray.length() == 0) {
                 TextView noSkillsTextView = new TextView(this);
                 noSkillsTextView.setText("No tiene habilidades registradas");
                 noSkillsTextView.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
                 noSkillsTextView.setTextSize(14);
+                noSkillsTextView.setTypeface(null, android.graphics.Typeface.ITALIC);
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                 );
-                params.topMargin = 24;
+                params.topMargin = (int) (24 * getResources().getDisplayMetrics().density);
                 noSkillsTextView.setLayoutParams(params);
 
                 habilidadesContent.addView(noSkillsTextView);
+                return;
+            }
+
+            // Crear contenedor horizontal para los chips (con wrap)
+            LinearLayout rowLayout = null;
+            int chipsInRow = 0;
+            int maxChipsPerRow = 3; // Máximo de chips por fila
+
+            // Agregar las habilidades del usuario como chips
+            for (int i = 0; i < skillsArray.length(); i++) {
+                JSONObject skill = skillsArray.getJSONObject(i);
+                String nombreHabilidad = skill.optString("nomHabilidad", "");
+
+                if (!nombreHabilidad.isEmpty()) {
+                    // Crear nueva fila si es necesario
+                    if (rowLayout == null || chipsInRow >= maxChipsPerRow) {
+                        rowLayout = new LinearLayout(this);
+                        rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        rowLayout.setGravity(android.view.Gravity.START);
+
+                        LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                        );
+                        rowParams.topMargin = (i == 0) ?
+                                (int) (16 * getResources().getDisplayMetrics().density) :
+                                (int) (8 * getResources().getDisplayMetrics().density);
+                        rowLayout.setLayoutParams(rowParams);
+
+                        habilidadesContent.addView(rowLayout);
+                        chipsInRow = 0;
+                    }
+
+                    // Crear chip de habilidad con el diseño de skill_chip_background
+                    TextView chipHabilidad = new TextView(this);
+                    chipHabilidad.setText(nombreHabilidad);
+                    chipHabilidad.setTextColor(getResources().getColor(R.color.texto_oscuro, null));
+                    chipHabilidad.setTextSize(12);
+                    chipHabilidad.setTypeface(null, android.graphics.Typeface.BOLD);
+                    chipHabilidad.setBackgroundResource(R.drawable.skill_chip_background);
+                    chipHabilidad.setGravity(android.view.Gravity.CENTER);
+
+                    // Configurar padding del chip
+                    chipHabilidad.setPadding(
+                            (int) (12 * getResources().getDisplayMetrics().density),
+                            (int) (6 * getResources().getDisplayMetrics().density),
+                            (int) (12 * getResources().getDisplayMetrics().density),
+                            (int) (6 * getResources().getDisplayMetrics().density)
+                    );
+
+                    // Configurar margins del chip
+                    LinearLayout.LayoutParams chipParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    chipParams.setMarginEnd((int) (8 * getResources().getDisplayMetrics().density));
+                    chipHabilidad.setLayoutParams(chipParams);
+
+                    rowLayout.addView(chipHabilidad);
+                    chipsInRow++;
+                }
             }
 
             Log.d(TAG, "Displayed " + skillsArray.length() + " skills");
@@ -311,7 +351,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
     private void setupTabLayout() {
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         LinearLayout habilidadesContent = findViewById(R.id.habilidadesContent);
-        LinearLayout resenasContent = findViewById(R.id.resenasContent);
+        android.widget.ScrollView resenasContent = findViewById(R.id.resenasContent); // Cambiado a ScrollView
         LinearLayout sobreMiContent = findViewById(R.id.sobreMiContent);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -390,19 +430,29 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
     }
 
     private void displayOpiniones() {
-        LinearLayout resenasContent = findViewById(R.id.resenasContent);
+        android.widget.ScrollView resenasScrollView = findViewById(R.id.resenasContent);
 
-        if (resenasContent == null) {
-            Log.e(TAG, "resenasContent is null");
+        if (resenasScrollView == null) {
+            Log.e(TAG, "resenasContent ScrollView is null");
             return;
         }
 
+        // Obtener el LinearLayout interno del ScrollView
+        LinearLayout resenasContent = (LinearLayout) resenasScrollView.getChildAt(0);
+
+        if (resenasContent == null) {
+            Log.e(TAG, "resenasContent LinearLayout is null");
+            return;
+        }
+
+        // Limpiar contenido existente excepto el título (primer elemento)
         int childCount = resenasContent.getChildCount();
         for (int i = childCount - 1; i > 0; i--) {
             resenasContent.removeViewAt(i);
         }
 
         try {
+            // Si no hay opiniones, mostrar mensaje
             if (userOpiniones.length() == 0) {
                 TextView noOpinionesTextView = new TextView(this);
                 noOpinionesTextView.setText("Este usuario no ha recibido reseñas.");
@@ -422,6 +472,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
                 return;
             }
 
+            // Mostrar cada opinión
             for (int i = 0; i < userOpiniones.length(); i++) {
                 JSONObject opinion = userOpiniones.getJSONObject(i);
                 LinearLayout opinionCard = createOpinionCard(opinion);
