@@ -4,201 +4,279 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="@color/fondo_principal"
     android:padding="20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="24dp">
 
-        <!-- Título -->
+        <!-- Título centrado -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Agendar Reunión"
             android:textColor="@color/texto_oscuro"
             android:textSize="28sp"
             android:textStyle="bold"
+            android:gravity="center"
+            android:textAlignment="center"
             android:layout_marginBottom="8dp" />
 
-        <!-- Subtítulo -->
+        <!-- Subtítulo centrado -->
         <TextView
             android:id="@+id/tvConQuien"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Con: Usuario"
             android:textColor="@color/texto_oscuro"
             android:textSize="16sp"
+            android:gravity="center"
+            android:textAlignment="center"
             android:layout_marginBottom="24dp" />
 
-        <!-- Card de información -->
-        <LinearLayout
+        <!-- Card de información con esquinas redondeadas -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/terciario"
-            android:padding="16dp"
-            android:elevation="4dp"
+            app:cardCornerRadius="12dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="@color/terciario"
             android:layout_marginBottom="24dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Selecciona fecha y hora"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Fecha -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fecha de la reunión"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@color/white"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/tvFechaSeleccionada"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Seleccionar fecha"
+                    android:text="Selecciona fecha y hora"
                     android:textColor="@color/texto_oscuro"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="16dp" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_my_calendar"
-                    android:contentDescription="Calendario"
-                    app:tint="@color/primario" />
-
-            </LinearLayout>
-
-            <!-- Hora -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hora de la reunión"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@color/white"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_vertical">
-
+                <!-- Fecha label centrado -->
                 <TextView
-                    android:id="@+id/tvHoraSeleccionada"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Seleccionar hora"
+                    android:text="Fecha de la reunión"
                     android:textColor="@color/texto_oscuro"
-                    android:textSize="16sp" />
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_recent_history"
-                    android:contentDescription="Reloj"
-                    app:tint="@color/primario" />
+                <!-- Fecha row como card pequeño -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardUseCompatPadding="true"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tvFechaSeleccionada"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Seleccionar fecha"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_my_calendar"
+                            android:contentDescription="Calendario"
+                            app:tint="@color/primario" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Hora label centrado -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hora de la reunión"
+                    android:textColor="@color/texto_oscuro"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Hora row como card pequeño -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardUseCompatPadding="true"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tvHoraSeleccionada"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Seleccionar hora"
+                            android:textColor="@color/texto_oscuro"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_recent_history"
+                            android:contentDescription="Reloj"
+                            app:tint="@color/primario" />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Duración label centrado -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Duración estimada"
+                    android:textColor="@color/texto_oscuro"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    app:cardUseCompatPadding="true"
+                    app:cardBackgroundColor="@color/white">
+
+                    <Spinner
+                        android:id="@+id/spinnerDuracion"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp" />
+
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-            <!-- Duración -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Duración estimada"
-                android:textColor="@color/texto_oscuro"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
-            <Spinner
-                android:id="@+id/spinnerDuracion"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/white"
-                android:padding="12dp" />
-
-        </LinearLayout>
-
-        <!-- Mensaje opcional -->
+        <!-- Mensaje opcional label centrado -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Mensaje (opcional)"
             android:textColor="@color/texto_oscuro"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:gravity="center"
             android:layout_marginBottom="8dp" />
 
-        <EditText
-            android:id="@+id/etMensaje"
+        <!-- Área de mensaje como card redondeado -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:background="@color/terciario"
-            android:padding="12dp"
-            android:hint="Escribe un mensaje para el usuario..."
-            android:textColorHint="@color/texto_oscuro"
-            android:textColor="@color/texto_oscuro"
-            android:gravity="top"
-            android:maxLines="5"
-            android:inputType="textMultiLine"
-            android:layout_marginBottom="32dp" />
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            app:cardBackgroundColor="@color/terciario"
+            android:layout_marginBottom="32dp">
 
-        <!-- Botones -->
+            <EditText
+                android:id="@+id/etMensaje"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@android:color/transparent"
+                android:padding="12dp"
+                android:hint="Escribe un mensaje para el usuario..."
+                android:textColorHint="@color/texto_oscuro"
+                android:textColor="@color/texto_oscuro"
+                android:gravity="top"
+                android:maxLines="5"
+                android:inputType="textMultiLine" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Botones con espacio y esquinas redondeadas -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
 
-            <Button
-                android:id="@+id/btnCancelar"
+            <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="64dp"
                 android:layout_weight="1"
-                android:text="Cancelar"
-                android:textColor="@color/texto_oscuro"
-                android:backgroundTint="@color/terciario"
-                android:layout_marginEnd="8dp"
-                android:textSize="16sp" />
+                app:cardCornerRadius="10dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/terciario"
+                android:layout_marginEnd="8dp">
 
-            <Button
-                android:id="@+id/btnEnviarSolicitud"
+                <Button
+                    android:id="@+id/btnCancelar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Cancelar"
+                    android:textColor="@color/texto_oscuro"
+                    android:background="@android:color/transparent"
+                    android:textSize="16sp"
+                    android:gravity="center" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="64dp"
                 android:layout_weight="1"
-                android:text="Enviar Solicitud"
-                android:textColor="@color/fondo_principal"
-                android:backgroundTint="@color/primario"
-                android:layout_marginStart="8dp"
-                android:textSize="16sp" />
+                app:cardCornerRadius="10dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/primario"
+                android:layout_marginStart="8dp">
+
+                <Button
+                    android:id="@+id/btnEnviarSolicitud"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Enviar Solicitud"
+                    android:textColor="@color/fondo_principal"
+                    android:background="@android:color/transparent"
+                    android:textSize="16sp"
+                    android:gravity="center" />
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
     </LinearLayout>
 
 </ScrollView>
-
