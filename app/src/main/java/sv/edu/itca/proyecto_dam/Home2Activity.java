@@ -104,6 +104,24 @@ public class Home2Activity extends AppCompatActivity {
     private void loadCurrentUserProfileImage(String fotoPerfil) {
         if (!fotoPerfil.isEmpty()) {
             String filename = fotoPerfil.contains("/")
+                    ? fotoPerfil.substring(fotoPerfil.lastIndexOf("/") + 1)
+                    : fotoPerfil;
+            String imageUrl = "http://172.193.118.141:8080/images/" + filename;
+
+            Picasso.get()
+                    .load(imageUrl)
+                    .transform(new CircularTransformation())
+                    .placeholder(R.drawable.ic_profile_placeholder)
+                    .error(R.drawable.ic_profile_placeholder)
+                    .into(imgPerfilHeader);
+        } else {
+            imgPerfilHeader.setImageResource(R.drawable.ic_profile_placeholder);
+        }
+    }
+
+    private void loadCurrentUserProfileImage(String fotoPerfil) {
+        if (!fotoPerfil.isEmpty()) {
+            String filename = fotoPerfil.contains("/")
                 ? fotoPerfil.substring(fotoPerfil.lastIndexOf("/") + 1)
                 : fotoPerfil;
             String imageUrl = "http://172.193.118.141:8080/images/" + filename;
@@ -207,6 +225,8 @@ public class Home2Activity extends AppCompatActivity {
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
             (int) (320 * getResources().getDisplayMetrics().density),
             LinearLayout.LayoutParams.WRAP_CONTENT
+                (int) (320 * getResources().getDisplayMetrics().density),
+                LinearLayout.LayoutParams.WRAP_CONTENT
         );
         cardParams.setMarginEnd((int) (16 * getResources().getDisplayMetrics().density));
         cardParams.bottomMargin = (int) (12 * getResources().getDisplayMetrics().density);
